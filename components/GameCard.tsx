@@ -36,8 +36,12 @@ export function GameCard({ game }: GameCardProps) {
 
   return (
     <article className="group relative flex flex-col h-full bg-[#392b6b] rounded-[14px] overflow-hidden hover:shadow-2xl hover:shadow-black/50 transition-all duration-300 transform-gpu translate-z-0">
-      {/* Image Container */}
-      <div className="relative aspect-[3/4] w-full bg-[#201040]">
+
+      {/* 
+        IMAGE SECTION 
+        Must be BEHIND the sliding content on hover.
+      */}
+      <div className="relative aspect-[3/4] w-full bg-[#201040] z-0">
         <Image
           src={game.imageUrl}
           alt={game.title}
@@ -78,24 +82,25 @@ export function GameCard({ game }: GameCardProps) {
         )}
       </div>
 
-      {/* Platform Bar - Distinct Strip - Appears above content */}
-      <div className="relative z-20 flex items-center w-full px-3 py-1 bg-black/40 backdrop-blur-[2px]">
-        <span className="w-4 h-4 flex items-center justify-center text-[10px] font-black bg-white text-black rounded-sm mr-2">
-          {platformInfo.icon.charAt(0)}
-        </span>
-        <span className="text-[11px] font-bold text-white/90 uppercase tracking-wide truncate">
-          {platformInfo.label}
-        </span>
-      </div>
+      {/* 
+        CONTENT + BUTTONS WRAPPER 
+        This entire block slides UP over the image on hover.
+        z-index must be higher than image.
+      */}
+      <div className="absolute bottom-0 left-0 right-0 z-10 bg-[#392b6b] flex flex-col transform transition-transform duration-300 ease-out group-hover:-translate-y-[60px]">
 
-      {/* Main Content & Buttons Wrapper */}
-      {/* Defined height to ensure consistent card size, but overflow hidden for animation */}
-      <div className="flex flex-col flex-1 relative bg-[#392b6b] overflow-hidden">
+        {/* Platform Bar - Top of the content block */}
+        <div className="flex items-center w-full px-3 py-1 bg-black/40 backdrop-blur-[2px]">
+          <span className="w-4 h-4 flex items-center justify-center text-[10px] font-black bg-white text-black rounded-sm mr-2">
+            {platformInfo.icon.charAt(0)}
+          </span>
+          <span className="text-[11px] font-bold text-white/90 uppercase tracking-wide truncate">
+            {platformInfo.label}
+          </span>
+        </div>
 
-        {/* Sliding Content Container */}
-        {/* On Hover: Moves UP to make room for buttons */}
-        <div className="flex flex-col p-3 gap-0.5 transition-transform duration-300 ease-out group-hover:-translate-y-[110px]">
-
+        {/* Text Info Section */}
+        <div className="p-3 flex flex-col gap-0.5 bg-[#392b6b]">
           {/* Title */}
           <h3 className="text-[15px] font-bold text-white leading-tight line-clamp-2 min-h-[38px] mb-1 group-hover:underline decoration-2 underline-offset-2">
             {game.title}
@@ -106,8 +111,8 @@ export function GameCard({ game }: GameCardProps) {
             {game.region}
           </div>
 
-          {/* Price Section */}
-          <div className="mt-3 flex flex-col items-end relative">
+          {/* Price Section - LEFT ALIGNED now */}
+          <div className="mt-2 flex flex-col items-start relative">
             {/* Old Price row */}
             {game.oldPriceEur && (
               <div className="text-[11px] text-gray-400 font-medium">
@@ -122,22 +127,24 @@ export function GameCard({ game }: GameCardProps) {
 
             {/* Cashback Value */}
             {game.cashbackEur && game.cashbackEur > 0 && (
-              <div className="text-[10px] text-[#00d68f] text-right mt-0.5 font-medium">
+              <div className="text-[10px] text-[#00d68f] mt-0.5 font-medium">
                 Cashback: <span className="font-bold">€{game.cashbackEur.toFixed(2)}</span>
               </div>
             )}
           </div>
 
-          {/* Lights Count */}
-          <div className="flex items-center gap-1 text-gray-400 mt-2">
+          {/* Likes Count */}
+          <div className="flex items-center gap-1 text-gray-400 mt-2 pb-1">
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
             <span className="text-xs font-medium">{game.likes}</span>
           </div>
         </div>
 
-        {/* Buttons - Absolute Bottom - Slide Up */}
-        {/* Initially translated down. On hover, slides up to 0 */}
-        <div className="absolute bottom-0 left-0 right-0 p-3 bg-[#392b6b] transform translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-30 flex flex-col gap-2 shadow-[0_-4px_12px_rgba(0,0,0,0.2)] h-[110px] border-t border-white/5">
+        {/* Buttons - Hidden below initially (using absolute positioning relative to this sliding container wouldn't work easily if we want it to "push". 
+            Actually, just appending them to the bottom of this container and relying on the translateY of the PARENT container to reveal them is the key.
+            User said "cover images". So the container grows upwards.
+        */}
+        <div className="px-3 pb-3 flex flex-col gap-2 bg-[#392b6b] absolute top-full left-0 right-0 h-[100px]">
           {/* Primary: Add to Cart (Yellow) */}
           <button className="w-full py-2.5 rounded-lg bg-[#ffc800] hover:bg-[#ffe066] text-black text-sm font-extrabold shadow-md transition-colors flex items-center justify-center gap-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -151,6 +158,7 @@ export function GameCard({ game }: GameCardProps) {
             Explore options
           </button>
         </div>
+
       </div>
     </article>
   );
