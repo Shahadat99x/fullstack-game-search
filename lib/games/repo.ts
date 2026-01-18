@@ -69,7 +69,32 @@ export async function listGames(options: ListGamesOptions = {}): Promise<ListGam
   const { data, error } = await query;
 
   if (error) {
+    console.error('[listGames] Supabase error:', {
+      message: error.message,
+      code: error.code,
+      details: error.details,
+      hint: error.hint,
+    });
+
+    // Provide helpful error messages
+    if (error.message?.includes('relation') && error.message?.includes('does not exist')) {
+      throw new Error(
+        'Table "games" does not exist. Please run schema.sql in Supabase SQL Editor. See supabase/README.md for instructions.'
+      );
+    }
+
+    if (error.code === 'PGRST301' || error.message?.includes('permission denied')) {
+      throw new Error(
+        'Permission denied on "games" table. Either run schema.sql to create the table, or disable RLS on the games table.'
+      );
+    }
+
     throw new Error(`Database error: ${error.message}`);
+  }
+
+  if (!data) {
+    console.warn('[listGames] No data returned from Supabase');
+    return { count: 0, items: [] };
   }
 
   const items = (data as GameRow[]).map(mapRowToGame);

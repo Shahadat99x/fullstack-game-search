@@ -20,8 +20,21 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.error('Error fetching games:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('[API /list] Error:', errorMessage);
+
+    // Return more helpful error in development
+    const isDev = process.env.NODE_ENV === 'development';
+
+    return NextResponse.json(
+      {
+        error: isDev ? errorMessage : 'Internal server error',
+        hint: isDev
+          ? 'Check server console for details. Make sure schema.sql and seed.sql have been run in Supabase.'
+          : undefined,
+      },
+      { status: 500 }
+    );
   }
 }

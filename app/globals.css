@@ -1,38 +1,109 @@
 @import 'tailwindcss';
 
+/* ============================================
+   ENEBA DESIGN TOKENS
+   ============================================ */
 :root {
-  --background: #0f172a;
-  --foreground: #f8fafc;
+  /* Background colors */
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16162a;
+  --bg-card: #252542;
+  --bg-card-hover: #2d2d4a;
+
+  /* Accent colors */
+  --accent-orange: #ff6b35;
+  --accent-green: #00c853;
+  --accent-teal: #00bfa5;
+  --accent-purple: #7c4dff;
+
+  /* Text colors */
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0b0;
+  --text-muted: #6b6b80;
+
+  /* UI colors */
+  --border-color: #3a3a5a;
+  --input-bg: #2a2a45;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* ============================================
+   BASE STYLES
+   ============================================ */
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   min-height: 100vh;
 }
 
-/* Custom scrollbar for dark theme */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: var(--bg-secondary);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: var(--border-color);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748b;
+  background: #4a4a6a;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.eneba-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.eneba-card:hover {
+  background: var(--bg-card-hover);
+  transform: translateY(-2px);
+}
+
+.badge-discount {
+  background: var(--accent-orange);
+  color: white;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.badge-cashback {
+  background: var(--accent-teal);
+  color: white;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.badge-region {
+  background: rgba(0, 200, 83, 0.15);
+  color: var(--accent-green);
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.price-current {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.price-old {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  text-decoration: line-through;
 }
