@@ -8,12 +8,17 @@ A full-stack game search application built with Next.js, TypeScript, and Tailwin
 
 - Node.js 18+
 - npm
+- Supabase account (for database)
 
 ### Installation
 
 ```bash
 npm install
 ```
+
+### Database Setup
+
+See [supabase/README.md](./supabase/README.md) for database setup instructions.
 
 ### Development
 
@@ -50,6 +55,10 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ├── lib/                # Utilities and data
 │   └── mock/
 │       └── games.ts    # Mock game data
+├── supabase/           # Database files
+│   ├── schema.sql     # Table definitions
+│   ├── seed.sql       # Seed data
+│   └── README.md      # Setup instructions
 ├── types/              # TypeScript types
 │   └── game.ts
 ├── docs/               # Documentation
@@ -69,13 +78,20 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 - [x] UI components with mock data
 - [x] CI/CD with GitHub Actions
 
-### Phase 2: Backend Integration (TODO)
+### Phase 2: Database Layer ✅
 
-- [ ] Supabase setup
-- [ ] API endpoints
-- [ ] Real search functionality
+- [x] Supabase PostgreSQL schema
+- [x] pg_trgm extension for fuzzy search
+- [x] Seed data (20 games)
+- [x] Verification queries
 
-### Phase 3: Advanced Features (TODO)
+### Phase 3: API Integration (TODO)
+
+- [ ] Supabase client setup
+- [ ] API routes for search
+- [ ] Connect UI to real data
+
+### Phase 4: Advanced Features (TODO)
 
 - [ ] Filters and sorting
 - [ ] Pagination
