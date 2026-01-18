@@ -46,14 +46,32 @@
 
 ---
 
-## Phase 3: API Integration (TODO)
+## Phase 3: API Integration ✅
 
-- [ ] Supabase client setup
-- [ ] API routes for search
-- [ ] Connect UI to real data
+### API Endpoints
 
-## Phase 4: Advanced Features (TODO)
+- [x] GET /list — returns all games
+- [x] GET /list?search=term — returns filtered games by title
+- [x] Response format: `{ count, items }`
 
-- [ ] Filters and sorting
-- [ ] Pagination
-- [ ] User authentication
+### Backend Implementation
+
+- [x] Supabase client setup (`lib/supabase/server.ts`)
+- [x] Games repository with DB mapping (`lib/games/repo.ts`)
+- [x] Next.js route handler (`app/api/list/route.ts`)
+- [x] URL rewrite: /list → /api/list
+
+### Frontend Integration
+
+- [x] Debounced search input (300ms)
+- [x] Loading state with spinner
+- [x] Error state with message
+- [x] Empty state when no results
+
+---
+
+## Phase 4: Deployment (TODO)
+
+- [ ] Deploy to Vercel
+- [ ] Configure production environment variables
+- [ ] Verify public API endpoints

@@ -1,7 +1,13 @@
+'use client';
+
 import Link from 'next/link';
 import { SearchBar } from './SearchBar';
 
-export function Header() {
+interface HeaderProps {
+  onSearch?: (term: string) => void;
+}
+
+export function Header({ onSearch }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 w-full bg-gray-900/95 backdrop-blur-sm border-b border-gray-800">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -18,7 +24,7 @@ export function Header() {
 
           {/* Search Bar */}
           <div className="flex flex-1 justify-center px-4">
-            <SearchBar />
+            <SearchBar onSearch={onSearch} />
           </div>
 
           {/* Right side placeholder */}

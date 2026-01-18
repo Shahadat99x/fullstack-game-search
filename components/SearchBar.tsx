@@ -1,10 +1,35 @@
 'use client';
 
+import { useEffect, useState, useCallback } from 'react';
+
 interface SearchBarProps {
   placeholder?: string;
+  onSearch?: (term: string) => void;
+  debounceMs?: number;
 }
 
-export function SearchBar({ placeholder = 'Search...' }: SearchBarProps) {
+export function SearchBar({
+  placeholder = 'Search...',
+  onSearch,
+  debounceMs = 300,
+}: SearchBarProps) {
+  const [inputValue, setInputValue] = useState('');
+
+  // Debounced search callback
+  useEffect(() => {
+    if (!onSearch) return;
+
+    const timeoutId = setTimeout(() => {
+      onSearch(inputValue);
+    }, debounceMs);
+
+    return () => clearTimeout(timeoutId);
+  }, [inputValue, onSearch, debounceMs]);
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  }, []);
+
   return (
     <div className="relative w-full max-w-2xl">
       <label htmlFor="game-search" className="sr-only">
@@ -30,6 +55,8 @@ export function SearchBar({ placeholder = 'Search...' }: SearchBarProps) {
         <input
           type="text"
           id="game-search"
+          value={inputValue}
+          onChange={handleChange}
           className="block w-full rounded-full border-0 bg-gray-800 py-3 pl-12 pr-4 
                      text-white placeholder-gray-400 ring-1 ring-inset ring-gray-700 
                      focus:ring-2 focus:ring-inset focus:ring-orange-500 

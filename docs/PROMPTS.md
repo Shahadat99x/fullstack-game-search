@@ -24,21 +24,33 @@ This file tracks prompts used during development.
 - Created Supabase PostgreSQL schema (`supabase/schema.sql`)
 - Enabled `pg_trgm` extension for fuzzy search
 - Added data quality constraints (CHECK constraints)
-- Created indexes for search optimization:
-  - B-tree on `lower(title)` for ILIKE
-  - GIN trigram index for similarity search
-  - Indexes on platform, region, price, likes
+- Created indexes for search optimization
 - Created seed data with 20 games (`supabase/seed.sql`)
 - Created setup documentation (`supabase/README.md`)
 
-**Search capabilities:**
+---
 
-- Case-insensitive partial match: `WHERE title ILIKE '%query%'`
-- Fuzzy similarity: `WHERE similarity(title, 'query') > 0.1`
-- Typo-tolerant: `WHERE title % 'query'`
+## Phase 3: API Integration
+
+**Tasks completed:**
+
+- Installed @supabase/supabase-js
+- Created server-side Supabase client (`lib/supabase/server.ts`)
+- Created games repository with snake_case to camelCase mapping (`lib/games/repo.ts`)
+- Created API route handler (`app/api/list/route.ts`)
+- Added URL rewrite /list → /api/list in next.config.ts
+- Updated SearchBar with debounce (300ms) support
+- Updated page.tsx with fetch, loading, error states
+- Created LoadingSpinner and ErrorMessage components
+- Updated tests with fetch mocking
+
+**API endpoints:**
+
+- `GET /list` — returns all games
+- `GET /list?search=<term>` — searches by title (ILIKE)
 
 ---
 
-## Phase 3: API Integration (TODO)
+## Phase 4: Deployment (TODO)
 
 _To be populated_

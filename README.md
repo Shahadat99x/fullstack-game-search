@@ -1,6 +1,6 @@
 # Game Search
 
-A full-stack game search application built with Next.js, TypeScript, and Tailwind CSS.
+A full-stack game search application built with Next.js, TypeScript, Tailwind CSS, and Supabase.
 
 ## 🚀 Getting Started
 
@@ -16,6 +16,14 @@ A full-stack game search application built with Next.js, TypeScript, and Tailwin
 npm install
 ```
 
+### Environment Setup
+
+Copy `.env.example` to `.env.local` and add your Supabase credentials:
+
+```bash
+cp .env.example .env.local
+```
+
 ### Database Setup
 
 See [supabase/README.md](./supabase/README.md) for database setup instructions.
@@ -27,6 +35,61 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the application.
+
+## 📡 API Endpoints
+
+### List Games
+
+```bash
+GET /list
+GET /api/list
+```
+
+Returns all games ordered by title.
+
+**Example:**
+
+```bash
+curl http://localhost:3000/list
+```
+
+**Response:**
+
+```json
+{
+  "count": 20,
+  "items": [
+    {
+      "id": "uuid",
+      "title": "FIFA 23",
+      "platform": "EA App",
+      "region": "GLOBAL",
+      "imageUrl": "/placeholder-game.png",
+      "priceEur": 19.99,
+      "oldPriceEur": 59.99,
+      "discountPercent": 67,
+      "cashbackEur": 0.5,
+      "likes": 1245
+    }
+  ]
+}
+```
+
+### Search Games
+
+```bash
+GET /list?search=<term>
+GET /api/list?search=<term>
+```
+
+Searches games by title (case-insensitive partial match).
+
+**Examples:**
+
+```bash
+curl "http://localhost:3000/list?search=fifa"
+curl "http://localhost:3000/list?search=red%20dead"
+```
 
 ## 📦 Scripts
 
@@ -42,68 +105,52 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 ## 🏗️ Project Structure
 
 ```
-├── app/                 # Next.js App Router
-│   ├── page.tsx        # Home page
-│   ├── layout.tsx      # Root layout
-│   └── globals.css     # Global styles
-├── components/         # React components
-│   ├── Header.tsx
-│   ├── SearchBar.tsx
-│   ├── ResultsSummary.tsx
-│   ├── GameCard.tsx
-│   └── GameGrid.tsx
-├── lib/                # Utilities and data
-│   └── mock/
-│       └── games.ts    # Mock game data
-├── supabase/           # Database files
-│   ├── schema.sql     # Table definitions
-│   ├── seed.sql       # Seed data
-│   └── README.md      # Setup instructions
-├── types/              # TypeScript types
-│   └── game.ts
-├── docs/               # Documentation
-│   ├── requirements.md
-│   ├── ui-map.md
-│   └── PROMPTS.md
-└── public/             # Static assets
+├── app/
+│   ├── api/list/        # API route handler
+│   ├── page.tsx         # Home page
+│   └── layout.tsx       # Root layout
+├── components/          # React components
+├── lib/
+│   ├── supabase/        # Supabase client
+│   ├── games/           # Games repository
+│   └── mock/            # Mock data (dev)
+├── supabase/            # Database files
+│   ├── schema.sql
+│   ├── seed.sql
+│   └── README.md
+├── types/               # TypeScript types
+└── docs/                # Documentation
 ```
 
 ## 📋 Development Phases
 
 ### Phase 1: Foundation + UI Shell ✅
 
-- [x] Next.js App Router + TypeScript + Tailwind
-- [x] ESLint + Prettier configuration
-- [x] Vitest + React Testing Library
-- [x] UI components with mock data
-- [x] CI/CD with GitHub Actions
+- Next.js App Router + TypeScript + Tailwind
+- ESLint + Prettier + Vitest
+- UI components with mock data
 
 ### Phase 2: Database Layer ✅
 
-- [x] Supabase PostgreSQL schema
-- [x] pg_trgm extension for fuzzy search
-- [x] Seed data (20 games)
-- [x] Verification queries
+- Supabase PostgreSQL schema
+- pg_trgm extension for fuzzy search
+- Seed data (20 games)
 
-### Phase 3: API Integration (TODO)
+### Phase 3: API Integration ✅
 
-- [ ] Supabase client setup
-- [ ] API routes for search
-- [ ] Connect UI to real data
+- API endpoints: /list, /list?search=
+- Supabase client integration
+- Debounced search with loading states
 
-### Phase 4: Advanced Features (TODO)
+### Phase 4: Deployment (TODO)
 
-- [ ] Filters and sorting
-- [ ] Pagination
-- [ ] User authentication
+- Deploy to Vercel
+- Production environment setup
 
 ## 🧪 Testing
 
 ```bash
-# Run all tests
 npm run test
-
-# Watch mode
 npm run test:watch
 ```
 
