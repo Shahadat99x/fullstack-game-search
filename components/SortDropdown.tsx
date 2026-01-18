@@ -9,29 +9,27 @@ interface SortDropdownProps {
 
 export function SortDropdown({ value, onChange }: SortDropdownProps) {
   return (
-    <div className="relative">
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value as SortOption)}
-        className="appearance-none bg-white/10 text-white text-sm px-4 py-2 pr-10 rounded-lg
-                 border border-white/10 hover:border-white/20 focus:border-emerald-400
-                 focus:outline-none cursor-pointer transition-colors"
-      >
-        {SORT_OPTIONS.map((option) => (
-          <option key={option.value} value={option.value} className="bg-gray-900 text-white">
-            {option.label}
-          </option>
-        ))}
-      </select>
-      <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-        <svg
-          className="w-4 h-4 text-white/60"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
+    <div className="flex items-center gap-2">
+      <span className="text-sm font-medium text-white/60 hidden sm:inline">Sort by:</span>
+      <div className="relative group">
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value as SortOption)}
+          className="appearance-none bg-[#2a1a5e] hover:bg-[#352270] text-white text-sm font-medium px-4 py-2.5 pr-10 rounded-lg
+                   shadow-sm border border-transparent focus:ring-2 focus:ring-white/10
+                   focus:outline-none cursor-pointer transition-all min-w-[160px]"
         >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+          {SORT_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value} className="bg-[#2a1a5e] text-white py-2">
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none transition-transform group-hover:translate-y-[-40%]">
+          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
       </div>
     </div>
   );

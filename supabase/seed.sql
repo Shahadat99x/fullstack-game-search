@@ -9,25 +9,25 @@ TRUNCATE public.games CASCADE;
 INSERT INTO public.games (title, platform, region, image_url, price_eur, old_price_eur, discount_percent, cashback_eur, likes)
 VALUES
   -- ============== SPLIT FICTION (13 variants) ==============
-  ('Split Fiction EA App Key (PC) GLOBAL', 'EA App', 'GLOBAL', '/images/games/split-fiction.png', 40.93, 49.99, 18, 4.50, 626),
-  ('Split Fiction (Xbox Series X|S) XBOX LIVE Key EUROPE', 'Xbox Live', 'EUROPE', '/images/games/split-fiction.png', 34.14, 49.99, 32, 3.76, 500),
-  ('Split Fiction (Xbox Series X|S) XBOX LIVE Key GLOBAL', 'Xbox Live', 'GLOBAL', '/images/games/split-fiction.png', 35.15, 49.99, 30, 3.87, 1039),
-  ('Split Fiction (Nintendo Switch 2) eShop Key EUROPE', 'Nintendo eShop', 'EUROPE', '/images/games/split-fiction.png', 36.25, NULL, NULL, 3.99, 288),
-  ('Split Fiction Steam Key GLOBAL', 'Steam', 'GLOBAL', '/images/games/split-fiction.png', 38.99, 49.99, 22, 4.29, 1523),
-  ('Split Fiction Steam Key EUROPE', 'Steam', 'EUROPE', '/images/games/split-fiction.png', 37.50, 49.99, 25, 4.13, 892),
-  ('Split Fiction PlayStation 5 Key EUROPE', 'PlayStation Network', 'EUROPE', '/images/games/split-fiction.png', 42.99, 59.99, 28, 4.73, 734),
-  ('Split Fiction PlayStation 5 Key GLOBAL', 'PlayStation Network', 'GLOBAL', '/images/games/split-fiction.png', 44.99, 59.99, 25, 4.95, 612),
-  ('Split Fiction Deluxe Edition EA App Key GLOBAL', 'EA App', 'GLOBAL', '/images/games/split-fiction.png', 54.99, 69.99, 21, 6.05, 445),
-  ('Split Fiction Ultimate Edition Steam Key GLOBAL', 'Steam', 'GLOBAL', '/images/games/split-fiction.png', 64.99, 79.99, 19, 7.15, 321),
-  ('Split Fiction + Season Pass Bundle PC', 'EA App', 'GLOBAL', '/images/games/split-fiction.png', 72.99, 89.99, 19, 8.03, 198),
-  ('Split Fiction Xbox Game Pass Edition', 'Xbox Live', 'GLOBAL', '/images/games/split-fiction.png', 29.99, 39.99, 25, 3.30, 876),
-  ('Split Fiction Standard Edition Origin Key', 'EA App', 'EUROPE', '/images/games/split-fiction.png', 33.49, 44.99, 26, 3.68, 567),
+  ('Split Fiction EA App Key (PC) GLOBAL', 'EA App', 'GLOBAL', '/images/games/split-fiction.jpg', 40.93, 49.99, 18, 4.50, 626),
+  ('Split Fiction (Xbox Series X|S) XBOX LIVE Key EUROPE', 'Xbox Live', 'EUROPE', '/images/games/split-fiction.jpg', 34.14, 49.99, 32, 3.76, 500),
+  ('Split Fiction (Xbox Series X|S) XBOX LIVE Key GLOBAL', 'Xbox Live', 'GLOBAL', '/images/games/split-fiction.jpg', 35.15, 49.99, 30, 3.87, 1039),
+  ('Split Fiction (Nintendo Switch 2) eShop Key EUROPE', 'Nintendo eShop', 'EUROPE', '/images/games/split-fiction.jpg', 36.25, NULL, NULL, 3.99, 288),
+  ('Split Fiction Steam Key GLOBAL', 'Steam', 'GLOBAL', '/images/games/split-fiction.jpg', 38.99, 49.99, 22, 4.29, 1523),
+  ('Split Fiction Steam Key EUROPE', 'Steam', 'EUROPE', '/images/games/split-fiction.jpg', 37.50, 49.99, 25, 4.13, 892),
+  ('Split Fiction PlayStation 5 Key EUROPE', 'PlayStation Network', 'EUROPE', '/images/games/split-fiction.jpg', 42.99, 59.99, 28, 4.73, 734),
+  ('Split Fiction PlayStation 5 Key GLOBAL', 'PlayStation Network', 'GLOBAL', '/images/games/split-fiction.jpg', 44.99, 59.99, 25, 4.95, 612),
+  ('Split Fiction Deluxe Edition EA App Key GLOBAL', 'EA App', 'GLOBAL', '/images/games/split-fiction.jpg', 54.99, 69.99, 21, 6.05, 445),
+  ('Split Fiction Ultimate Edition Steam Key GLOBAL', 'Steam', 'GLOBAL', '/images/games/split-fiction.jpg', 64.99, 79.99, 19, 7.15, 321),
+  ('Split Fiction + Season Pass Bundle PC', 'EA App', 'GLOBAL', '/images/games/split-fiction.jpg', 72.99, 89.99, 19, 8.03, 198),
+  ('Split Fiction Xbox Game Pass Edition', 'Xbox Live', 'GLOBAL', '/images/games/split-fiction.jpg', 29.99, 39.99, 25, 3.30, 876),
+  ('Split Fiction Standard Edition Origin Key', 'EA App', 'EUROPE', '/images/games/split-fiction.jpg', 33.49, 44.99, 26, 3.68, 567),
 
   -- ============== REQUIRED GAMES ==============
-  ('FIFA 23 EA App Key GLOBAL', 'EA App', 'GLOBAL', '/images/games/fifa-23.png', 19.99, 59.99, 67, 2.20, 1245),
-  ('FIFA 23 Steam Key EUROPE', 'Steam', 'EUROPE', '/images/games/fifa-23.png', 17.99, 59.99, 70, 1.98, 987),
-  ('Red Dead Redemption 2 Steam Key GLOBAL', 'Steam', 'GLOBAL', '/images/games/red-dead-2.png', 29.99, 59.99, 50, 3.30, 3420),
-  ('Red Dead Redemption 2 PlayStation 4 Key', 'PlayStation Network', 'GLOBAL', '/images/games/red-dead-2.png', 24.99, 49.99, 50, 2.75, 2890),
+  ('FIFA 23 EA App Key GLOBAL', 'EA App', 'GLOBAL', '/images/games/fifa-23.jpg', 19.99, 59.99, 67, 2.20, 1245),
+  ('FIFA 23 Steam Key EUROPE', 'Steam', 'EUROPE', '/images/games/fifa-23.jpg', 17.99, 59.99, 70, 1.98, 987),
+  ('Red Dead Redemption 2 Steam Key GLOBAL', 'Steam', 'GLOBAL', '/images/games/red-dead-redemption-2.jpg', 29.99, 59.99, 50, 3.30, 3420),
+  ('Red Dead Redemption 2 PlayStation 4 Key', 'PlayStation Network', 'GLOBAL', '/images/games/red-dead-redemption-2.jpg', 24.99, 49.99, 50, 2.75, 2890),
 
   -- ============== OTHER POPULAR GAMES ==============
   ('Elden Ring Steam Key GLOBAL', 'Steam', 'GLOBAL', '/placeholder-game.png', 44.99, 59.99, 25, 4.95, 5678),
