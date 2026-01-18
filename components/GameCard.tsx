@@ -5,13 +5,28 @@ interface GameCardProps {
   game: Game;
 }
 
+// Platform color mapping
+function getPlatformColor(platform: string): string {
+  const colors: Record<string, string> = {
+    'EA App': 'bg-orange-500',
+    'Steam': 'bg-gray-700',
+    'Xbox Live': 'bg-green-600',
+    'PlayStation Network': 'bg-blue-600',
+    'Nintendo eShop': 'bg-red-600',
+    'Ubisoft Connect': 'bg-blue-500',
+    'Battle.net': 'bg-blue-700',
+    'GOG': 'bg-purple-600',
+  };
+  return colors[platform] || 'bg-gray-600';
+}
+
 export function GameCard({ game }: GameCardProps) {
   const formatPrice = (price: number) => `€${price.toFixed(2)}`;
 
   return (
-    <article className="eneba-card overflow-hidden flex flex-col cursor-pointer group">
-      {/* Image Container */}
-      <div className="relative aspect-[3/4] overflow-hidden bg-[var(--bg-secondary)]">
+    <article className="group cursor-pointer">
+      {/* Image Container - Full rounded card */}
+      <div className="relative aspect-[3/4] overflow-hidden rounded-xl bg-gradient-to-b from-gray-700 to-gray-800 mb-3">
         <Image
           src={game.imageUrl}
           alt={game.title}
@@ -20,52 +35,74 @@ export function GameCard({ game }: GameCardProps) {
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
         />
 
-        {/* Cashback Badge - Top Left */}
+        {/* Cashback Badge - Bottom Left (Eneba style) */}
         {game.cashbackEur && game.cashbackEur > 0 && (
-          <div className="absolute top-2 left-2">
-            <span className="badge-cashback">Cashback €{game.cashbackEur.toFixed(2)}</span>
+          <div className="absolute bottom-3 left-3">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-500 text-white shadow-lg">
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+              </svg>
+              CASHBACK
+            </span>
           </div>
         )}
 
-        {/* Discount Badge - Top Right */}
-        {game.discountPercent && game.discountPercent > 0 && (
-          <div className="absolute top-2 right-2">
-            <span className="badge-discount">-{game.discountPercent}%</span>
-          </div>
-        )}
-
-        {/* Likes - Bottom Right */}
-        <div className="absolute bottom-2 right-2 flex items-center gap-1 bg-black/60 backdrop-blur-sm rounded-full px-2 py-1">
-          <svg className="h-3.5 w-3.5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-            <path
-              fillRule="evenodd"
-              d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
-              clipRule="evenodd"
-            />
-          </svg>
-          <span className="text-xs font-medium text-white">{game.likes.toLocaleString()}</span>
+        {/* Platform Badge - Bottom Right (Eneba style) */}
+        <div className="absolute bottom-3 right-3">
+          <span className={`inline-flex items-center px-2.5 py-1 rounded text-xs font-medium text-white ${getPlatformColor(game.platform)}`}>
+            {game.platform}
+          </span>
         </div>
+
+        {/* Discount Badge - Top Right (if exists) */}
+        {game.discountPercent && game.discountPercent > 0 && (
+          <div className="absolute top-3 right-3">
+            <span className="px-2 py-1 rounded text-xs font-bold bg-red-500 text-white">
+              -{game.discountPercent}%
+            </span>
+          </div>
+        )}
       </div>
 
-      {/* Content */}
-      <div className="flex flex-col flex-1 p-3">
-        {/* Platform & Region Row */}
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-xs text-[var(--text-secondary)] font-medium">{game.platform}</span>
-          <span className="badge-region">{game.region}</span>
-        </div>
-
+      {/* Content Below Card */}
+      <div className="space-y-2 px-1">
         {/* Title */}
-        <h3 className="text-sm font-semibold text-white line-clamp-2 mb-auto group-hover:text-[var(--accent-orange)] transition-colors">
+        <h3 className="text-sm font-semibold text-white line-clamp-2 leading-tight group-hover:text-white/90 transition-colors">
           {game.title}
         </h3>
 
+        {/* Region */}
+        <p className="text-xs font-medium text-emerald-400">{game.region}</p>
+
         {/* Price Section */}
-        <div className="mt-3 pt-3 border-t border-[var(--border-color)]">
-          <div className="flex items-baseline gap-2 flex-wrap">
-            <span className="price-current">{formatPrice(game.priceEur)}</span>
-            {game.oldPriceEur && <span className="price-old">{formatPrice(game.oldPriceEur)}</span>}
-          </div>
+        <div className="space-y-1">
+          {/* Old Price + Discount */}
+          {game.oldPriceEur && (
+            <div className="flex items-center gap-2 text-xs">
+              <span className="text-white/50 line-through">From {formatPrice(game.oldPriceEur)}</span>
+              {game.discountPercent && (
+                <span className="text-emerald-400 font-medium">-{game.discountPercent}%</span>
+              )}
+            </div>
+          )}
+
+          {/* Current Price */}
+          <p className="text-xl font-bold text-white">{formatPrice(game.priceEur)}</p>
+
+          {/* Cashback Amount */}
+          {game.cashbackEur && game.cashbackEur > 0 && (
+            <p className="text-xs text-emerald-400">
+              Cashback: <span className="font-semibold">€{game.cashbackEur.toFixed(2)}</span>
+            </p>
+          )}
+        </div>
+
+        {/* Likes */}
+        <div className="flex items-center gap-1 text-white/60">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+          </svg>
+          <span className="text-xs">{game.likes.toLocaleString()}</span>
         </div>
       </div>
     </article>

@@ -1,36 +1,40 @@
 @import 'tailwindcss';
 
 /* ============================================
-   ENEBA DESIGN TOKENS
+   ENEBA DESIGN TOKENS - Matching exact colors
    ============================================ */
 :root {
-  /* Background colors */
-  --bg-primary: #1a1a2e;
-  --bg-secondary: #16162a;
-  --bg-card: #252542;
-  --bg-card-hover: #2d2d4a;
+  /* Eneba Purple Theme */
+  --bg-primary: #5a31f4;
+  --bg-secondary: #4a28d4;
+  --bg-dark: #1a0a4f;
+
+  /* Card colors */
+  --card-bg: #2d1a6b;
+  --card-hover: #3d2a7b;
 
   /* Accent colors */
   --accent-orange: #ff6b35;
-  --accent-green: #00c853;
-  --accent-teal: #00bfa5;
-  --accent-purple: #7c4dff;
+  --accent-green: #00d68f;
+  --accent-teal: #00bcd4;
+  --accent-red: #ff4757;
 
   /* Text colors */
   --text-primary: #ffffff;
-  --text-secondary: #a0a0b0;
-  --text-muted: #6b6b80;
+  --text-secondary: #b8b8d0;
+  --text-muted: #8080a0;
 
   /* UI colors */
-  --border-color: #3a3a5a;
-  --input-bg: #2a2a45;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --input-bg: rgba(255, 255, 255, 0.1);
 }
 
 /* ============================================
    BASE STYLES
    ============================================ */
 body {
-  background: linear-gradient(180deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-dark) 100%);
+  background-attachment: fixed;
   color: var(--text-primary);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   min-height: 100vh;
@@ -42,68 +46,14 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
+  background: var(--bg-dark);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border-color);
+  background: var(--bg-primary);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #4a4a6a;
-}
-
-/* ============================================
-   UTILITY CLASSES
-   ============================================ */
-.eneba-card {
-  background: var(--bg-card);
-  border-radius: 12px;
-  transition: all 0.2s ease;
-}
-
-.eneba-card:hover {
-  background: var(--bg-card-hover);
-  transform: translateY(-2px);
-}
-
-.badge-discount {
-  background: var(--accent-orange);
-  color: white;
-  font-weight: 700;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 12px;
-}
-
-.badge-cashback {
-  background: var(--accent-teal);
-  color: white;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  text-transform: uppercase;
-}
-
-.badge-region {
-  background: rgba(0, 200, 83, 0.15);
-  color: var(--accent-green);
-  font-weight: 500;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-}
-
-.price-current {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.price-old {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-  text-decoration: line-through;
+  background: #7a51ff;
 }

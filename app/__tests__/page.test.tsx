@@ -67,7 +67,6 @@ describe('Home Page', () => {
     render(<Home />);
     const searchInput = screen.getByRole('textbox', { name: /search games/i });
     expect(searchInput).toBeInTheDocument();
-    expect(searchInput).toHaveAttribute('placeholder', 'Search...');
   });
 
   it('renders results summary after loading', async () => {

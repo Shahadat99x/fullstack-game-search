@@ -8,11 +8,7 @@ interface SearchBarProps {
   debounceMs?: number;
 }
 
-export function SearchBar({
-  placeholder = 'Search...',
-  onSearch,
-  debounceMs = 300,
-}: SearchBarProps) {
+export function SearchBar({ placeholder = 'Search...', onSearch, debounceMs = 300 }: SearchBarProps) {
   const [inputValue, setInputValue] = useState('');
   const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(null);
 
@@ -40,40 +36,30 @@ export function SearchBar({
   }, [onSearch]);
 
   return (
-    <div className="relative w-full max-w-xl">
+    <div className="relative w-full">
       <label htmlFor="game-search" className="sr-only">
         Search games
       </label>
       <div className="relative">
         {/* Search Icon */}
         <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-          <svg
-            className="h-5 w-5 text-gray-400"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
+          <svg className="h-5 w-5 text-white/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
 
-        {/* Input */}
+        {/* Input - Eneba style with white background, rounded */}
         <input
           type="text"
           id="game-search"
           value={inputValue}
           onChange={handleChange}
-          className="block w-full rounded-lg border-0 py-3 pl-12 pr-10
-                     text-white placeholder-gray-500 
-                     bg-[var(--input-bg)] 
-                     ring-1 ring-inset ring-[var(--border-color)]
-                     focus:ring-2 focus:ring-inset focus:ring-[var(--accent-purple)]
-                     transition-all duration-200 text-sm"
+          className="block w-full rounded-full py-3 pl-12 pr-10
+                     text-gray-900 placeholder-gray-500 
+                     bg-white
+                     border-0 shadow-lg
+                     focus:ring-2 focus:ring-white/50
+                     transition-all duration-200 text-sm font-medium"
           placeholder={placeholder}
         />
 
@@ -82,17 +68,12 @@ export function SearchBar({
           <button
             type="button"
             onClick={handleClear}
-            className="absolute inset-y-0 right-0 flex items-center pr-3
-                       text-gray-400 hover:text-white transition-colors"
+            className="absolute inset-y-0 right-0 flex items-center pr-4
+                       text-gray-400 hover:text-gray-600 transition-colors"
             aria-label="Clear search"
           >
             <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         )}
