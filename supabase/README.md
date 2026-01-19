@@ -38,15 +38,33 @@ Run these queries in the SQL Editor to verify your setup:
 
 ```sql
 SELECT count(*) FROM public.games;
--- Expected: 20
+-- Expected: 51 (13 Split Fiction + 10 FIFA 23 + 10 RDR2 + 6 GTA V + 6 Witcher 3 + 6 Forza Horizon 5)
 ```
 
-### Check required games exist
+### Count Split Fiction offers (should be exactly 13)
 
 ```sql
-SELECT title FROM public.games
-WHERE title IN ('FIFA 23', 'Red Dead Redemption 2', 'Split Fiction');
--- Expected: 3 rows
+SELECT count(*) FROM public.games WHERE title ILIKE '%split fiction%';
+-- Expected: 13
+```
+
+### Check all 6 base titles exist
+
+```sql
+SELECT DISTINCT
+  CASE
+    WHEN title ILIKE '%split fiction%' THEN 'Split Fiction'
+    WHEN title ILIKE '%fifa 23%' THEN 'FIFA 23'
+    WHEN title ILIKE '%red dead%' THEN 'Red Dead Redemption 2'
+    WHEN title ILIKE '%gta%' THEN 'GTA V'
+    WHEN title ILIKE '%witcher%' THEN 'The Witcher 3'
+    WHEN title ILIKE '%forza%' THEN 'Forza Horizon 5'
+  END AS base_title,
+  count(*) as offer_count
+FROM public.games
+GROUP BY base_title
+ORDER BY offer_count DESC;
+-- Expected: 6 rows with counts (13, 10, 10, 6, 6, 6)
 ```
 
 ### Test ILIKE search (case-insensitive)
@@ -55,7 +73,7 @@ WHERE title IN ('FIFA 23', 'Red Dead Redemption 2', 'Split Fiction');
 SELECT title, platform, price_eur
 FROM public.games
 WHERE title ILIKE '%fifa%';
--- Expected: FIFA 23
+-- Expected: 10 rows
 ```
 
 ### Test fuzzy search with pg_trgm
