@@ -16,6 +16,7 @@ function getPlatformInfo(platform: string): { label: string; icon: string } {
     'Ubisoft Connect': { label: 'Ubisoft', icon: 'UBI' },
     'Battle.net': { label: 'Battle.net', icon: 'BNET' },
     GOG: { label: 'GOG', icon: 'GOG' },
+    Rockstar: { label: 'Rockstar', icon: 'R*' },
   };
   return mapping[platform] || { label: platform, icon: 'GAME' };
 }
@@ -35,7 +36,7 @@ export function GameCard({ game }: GameCardProps) {
   const regionColor = getRegionColor(game.region);
 
   return (
-    <article className="group relative flex flex-col h-[480px] bg-[#1f0a4d] rounded-none overflow-hidden hover:shadow-2xl hover:shadow-black/50 transition-all duration-300 transform-gpu translate-z-0">
+    <article className="group relative flex flex-col h-[480px] bg-[#1f0a4d] rounded-none overflow-hidden border border-white/10 hover:border-white/25 hover:shadow-2xl hover:shadow-black/50 transition-all duration-300 transform-gpu translate-z-0">
 
       {/* 
         IMAGE SECTION - Fixed Height
@@ -60,11 +61,11 @@ export function GameCard({ game }: GameCardProps) {
           </button>
         </div>
 
-        {/* Cashback Badge - Persistent on Image, Top Left */}
+        {/* Cashback Badge - Glass Pill Style */}
         {game.cashbackEur && game.cashbackEur > 0 && (
           <div className="absolute bottom-2 left-2 z-10 transition-opacity duration-300 group-hover:opacity-0">
-            <div className="flex items-center gap-1.5 pl-1.5 pr-2.5 py-1 rounded-full bg-[#00d68f] text-white shadow-md">
-              <div className="w-3.5 h-3.5 flex items-center justify-center rounded-full border-[1.5px] border-white">
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[#00d68f]/70 backdrop-blur-md border border-white/20 text-white shadow-lg">
+              <div className="w-3.5 h-3.5 flex items-center justify-center rounded-full border-[1.5px] border-white/80">
                 <span className="text-[9px] font-bold leading-none">+</span>
               </div>
               <span className="text-[10px] font-bold tracking-wide uppercase">CASHBACK</span>
@@ -80,12 +81,12 @@ export function GameCard({ game }: GameCardProps) {
       */}
       <div className="absolute bottom-0 left-0 right-0 z-10 bg-[#1f0a4d] flex flex-col transform transition-transform duration-300 ease-out group-hover:-translate-y-[110px]">
 
-        {/* Platform Bar - Top of the content block */}
-        <div className="flex items-center w-full px-3 py-1.5 bg-[#140633]">
+        {/* Platform Bar - Glass Effect */}
+        <div className="flex items-center justify-center w-full h-10 bg-black/30 backdrop-blur-sm">
           <span className="w-4 h-4 flex items-center justify-center text-[10px] font-black bg-white text-black rounded-sm mr-2">
             {platformInfo.icon.charAt(0)}
           </span>
-          <span className="text-[11px] font-bold text-white/90 uppercase tracking-wide truncate">
+          <span className="text-[11px] font-bold text-white/90 uppercase tracking-wide">
             {platformInfo.label}
           </span>
         </div>
