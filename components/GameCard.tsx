@@ -5,20 +5,20 @@ interface GameCardProps {
   game: Game;
 }
 
-// Platform color/icon mapping
-function getPlatformInfo(platform: string): { label: string; icon: string } {
-  const mapping: Record<string, { label: string; icon: string }> = {
-    'EA App': { label: 'EA App', icon: 'EA' },
-    Steam: { label: 'Steam', icon: 'STEAM' },
-    'Xbox Live': { label: 'Xbox Live', icon: 'XBOX' },
-    'PlayStation Network': { label: 'PSN', icon: 'PS' },
-    'Nintendo eShop': { label: 'Nintendo', icon: 'NSW' },
-    'Ubisoft Connect': { label: 'Ubisoft', icon: 'UBI' },
-    'Battle.net': { label: 'Battle.net', icon: 'BNET' },
-    GOG: { label: 'GOG', icon: 'GOG' },
-    Rockstar: { label: 'Rockstar', icon: 'R*' },
+// Platform color/icon mapping with brand colors (Eneba-style)
+function getPlatformInfo(platform: string): { label: string; icon: string; bgColor: string; textColor: string } {
+  const mapping: Record<string, { label: string; icon: string; bgColor: string; textColor: string }> = {
+    'EA App': { label: 'EA App', icon: 'EA', bgColor: 'bg-[#ff4747]', textColor: 'text-white' },
+    Steam: { label: 'STEAM', icon: 'S', bgColor: 'bg-[#1b2838]', textColor: 'text-white' },
+    'Xbox Live': { label: 'XBOX LIVE', icon: 'X', bgColor: 'bg-[#107c10]', textColor: 'text-white' },
+    'PlayStation Network': { label: 'PSN', icon: 'P', bgColor: 'bg-[#006fcd]', textColor: 'text-white' },
+    'Nintendo eShop': { label: 'Nintendo', icon: 'N', bgColor: 'bg-[#e60012]', textColor: 'text-white' },
+    'Ubisoft Connect': { label: 'Ubisoft', icon: 'U', bgColor: 'bg-[#0070ff]', textColor: 'text-white' },
+    'Battle.net': { label: 'Battle.net', icon: 'B', bgColor: 'bg-[#00aeff]', textColor: 'text-white' },
+    GOG: { label: 'GOG', icon: 'G', bgColor: 'bg-[#86328a]', textColor: 'text-white' },
+    Rockstar: { label: 'Rockstar', icon: 'R', bgColor: 'bg-[#fcaf17]', textColor: 'text-black' },
   };
-  return mapping[platform] || { label: platform, icon: 'GAME' };
+  return mapping[platform] || { label: platform, icon: '?', bgColor: 'bg-gray-600', textColor: 'text-white' };
 }
 
 // Helper for region color
@@ -61,14 +61,14 @@ export function GameCard({ game }: GameCardProps) {
           </button>
         </div>
 
-        {/* Cashback Badge - Glass Pill Style */}
+        {/* Cashback Badge - Solid Pill Style (Eneba-style) */}
         {game.cashbackEur && game.cashbackEur > 0 && (
-          <div className="absolute bottom-2 left-2 z-10 transition-opacity duration-300 group-hover:opacity-0">
-            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[#00d68f]/70 backdrop-blur-md border border-white/20 text-white shadow-lg">
-              <div className="w-3.5 h-3.5 flex items-center justify-center rounded-full border-[1.5px] border-white/80">
+          <div className="absolute bottom-12 left-2 z-10 transition-opacity duration-300 group-hover:opacity-0">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#00d68f] text-white shadow-lg">
+              <div className="w-3.5 h-3.5 flex items-center justify-center rounded-full border-[1.5px] border-white">
                 <span className="text-[9px] font-bold leading-none">+</span>
               </div>
-              <span className="text-[10px] font-bold tracking-wide uppercase">CASHBACK</span>
+              <span className="text-[11px] font-bold tracking-wide uppercase">CASHBACK</span>
             </div>
           </div>
         )}
@@ -81,12 +81,12 @@ export function GameCard({ game }: GameCardProps) {
       */}
       <div className="absolute bottom-0 left-0 right-0 z-10 bg-[#1f0a4d] flex flex-col transform transition-transform duration-300 ease-out group-hover:-translate-y-[110px]">
 
-        {/* Platform Bar - Glass Effect */}
-        <div className="flex items-center justify-center w-full h-10 bg-black/30 backdrop-blur-sm">
-          <span className="w-4 h-4 flex items-center justify-center text-[10px] font-black bg-white text-black rounded-sm mr-2">
-            {platformInfo.icon.charAt(0)}
+        {/* Platform Bar - Glass Effect with Brand-Colored Icons */}
+        <div className="flex items-center justify-center w-full h-9 bg-black/40 backdrop-blur-sm">
+          <span className={`w-5 h-5 flex items-center justify-center text-[10px] font-black rounded-full mr-2 ${platformInfo.bgColor} ${platformInfo.textColor}`}>
+            {platformInfo.icon}
           </span>
-          <span className="text-[11px] font-bold text-white/90 uppercase tracking-wide">
+          <span className="text-[11px] font-semibold text-white/90 uppercase tracking-wide">
             {platformInfo.label}
           </span>
         </div>
