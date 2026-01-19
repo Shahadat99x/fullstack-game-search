@@ -4,6 +4,10 @@ export interface FilterState {
   priceMax: number | null;
   region: string | null;
   platforms: string[];
+  countries: string[];
+  productTypes: string[];
+  operatingSystems: string[];
+  genres: string[];
   sort: SortOption;
 }
 
@@ -23,6 +27,31 @@ export const PLATFORMS = [
 
 export const REGIONS = ['GLOBAL', 'EUROPE'] as const;
 
+export const COUNTRIES = [
+  'Lithuania',
+  'Poland',
+  'Germany',
+  'France',
+  'Spain',
+  'Italy',
+  'United Kingdom',
+  'United States',
+] as const;
+
+export const PRODUCT_TYPES = ['Game', 'DLC', 'Software'] as const;
+
+export const OPERATING_SYSTEMS = ['Windows', 'Mac', 'Linux'] as const;
+
+export const GENRES = [
+  'Action',
+  'RPG',
+  'Sports',
+  'Shooter',
+  'Adventure',
+  'Racing',
+  'Simulation',
+] as const;
+
 export const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: 'popularity', label: 'Popularity' },
   { value: 'price_asc', label: 'Price: Low to High' },
@@ -35,5 +64,9 @@ export const DEFAULT_FILTERS: FilterState = {
   priceMax: null,
   region: null,
   platforms: [],
+  countries: [],
+  productTypes: [],
+  operatingSystems: [],
+  genres: [],
   sort: 'popularity',
 };

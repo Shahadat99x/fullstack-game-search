@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Header } from '@/components/Header';
 import { FiltersSidebar } from '@/components/filters/FiltersSidebar';
 import { SortDropdown } from '@/components/SortDropdown';
@@ -15,29 +15,86 @@ interface GamesResponse {
   items: Game[];
 }
 
+/**
+ * Apply client-side filters to games array
+ */
+function applyClientFilters(games: Game[], filters: FilterState): Game[] {
+  let result = [...games];
+
+  // Price filter (already applied server-side, but keep for consistency)
+  if (filters.priceMin !== null) {
+    result = result.filter((g) => g.priceEur >= filters.priceMin!);
+  }
+  if (filters.priceMax !== null) {
+    result = result.filter((g) => g.priceEur <= filters.priceMax!);
+  }
+
+  // Country filter
+  if (filters.countries.length > 0) {
+    result = result.filter((g) => filters.countries.includes(g.country));
+  }
+
+  // Product type filter
+  if (filters.productTypes.length > 0) {
+    result = result.filter((g) => filters.productTypes.includes(g.productType));
+  }
+
+  // Operating system filter
+  if (filters.operatingSystems.length > 0) {
+    result = result.filter((g) => filters.operatingSystems.includes(g.operatingSystem));
+  }
+
+  // Genre filter
+  if (filters.genres.length > 0) {
+    result = result.filter((g) => filters.genres.includes(g.genre));
+  }
+
+  // Region filter (already applied server-side)
+  if (filters.region) {
+    result = result.filter((g) => g.region === filters.region);
+  }
+
+  // Platform filter (already applied server-side)
+  if (filters.platforms.length > 0) {
+    result = result.filter((g) => filters.platforms.includes(g.platform));
+  }
+
+  // Client-side sorting
+  switch (filters.sort) {
+    case 'price_asc':
+      result.sort((a, b) => a.priceEur - b.priceEur);
+      break;
+    case 'price_desc':
+      result.sort((a, b) => b.priceEur - a.priceEur);
+      break;
+    case 'discount':
+      result.sort((a, b) => (b.discountPercent ?? 0) - (a.discountPercent ?? 0));
+      break;
+    case 'popularity':
+    default:
+      result.sort((a, b) => b.likes - a.likes);
+      break;
+  }
+
+  return result;
+}
+
 export default function Home() {
-  const [games, setGames] = useState<Game[]>([]);
-  const [count, setCount] = useState(0);
+  const [allGames, setAllGames] = useState<Game[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
-  const fetchGames = useCallback(async (search: string, currentFilters: FilterState) => {
+  // Fetch games from API (search only, no server-side filters)
+  const fetchGames = useCallback(async (search: string) => {
     setIsLoading(true);
     setError(null);
 
     try {
       const params = new URLSearchParams();
-
       if (search) params.set('search', search);
-      if (currentFilters.priceMin !== null) params.set('priceMin', String(currentFilters.priceMin));
-      if (currentFilters.priceMax !== null) params.set('priceMax', String(currentFilters.priceMax));
-      if (currentFilters.region) params.set('region', currentFilters.region);
-      if (currentFilters.platforms.length > 0)
-        params.set('platforms', currentFilters.platforms.join(','));
-      if (currentFilters.sort !== 'popularity') params.set('sort', currentFilters.sort);
 
       const url = `/api/list${params.toString() ? `?${params}` : ''}`;
       const response = await fetch(url);
@@ -47,21 +104,25 @@ export default function Home() {
       }
 
       const data: GamesResponse = await response.json();
-      setGames(data.items);
-      setCount(data.count);
+      setAllGames(data.items);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
-      setGames([]);
-      setCount(0);
+      setAllGames([]);
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  // Initial load and refetch on filter changes
+  // Refetch when search changes
   useEffect(() => {
-    fetchGames(searchTerm, filters);
-  }, [fetchGames, searchTerm, filters]);
+    fetchGames(searchTerm);
+  }, [fetchGames, searchTerm]);
+
+  // Apply client-side filtering
+  const filteredGames = useMemo(
+    () => applyClientFilters(allGames, filters),
+    [allGames, filters]
+  );
 
   const handleSearch = useCallback((term: string) => {
     setSearchTerm(term);
@@ -123,7 +184,7 @@ export default function Home() {
           <div className="flex-1 min-w-0">
             {/* Results Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-              <ResultsSummary count={count} />
+              <ResultsSummary count={filteredGames.length} />
               <SortDropdown value={filters.sort} onChange={handleSortChange} />
             </div>
 
@@ -133,7 +194,7 @@ export default function Home() {
             ) : error ? (
               <ErrorMessage message={error} />
             ) : (
-              <GameGrid games={games} />
+              <GameGrid games={filteredGames} />
             )}
           </div>
         </div>

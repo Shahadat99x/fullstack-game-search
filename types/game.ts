@@ -3,6 +3,10 @@ export interface Game {
   title: string;
   platform: string;
   region: string;
+  country: string;
+  productType: string;
+  operatingSystem: string;
+  genre: string;
   imageUrl: string;
   priceEur: number;
   oldPriceEur: number | null;

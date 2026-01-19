@@ -10,6 +10,10 @@ interface GameRow {
   title: string;
   platform: string;
   region: string;
+  country: string;
+  product_type: string;
+  operating_system: string;
+  genre: string;
   image_url: string;
   price_eur: number;
   old_price_eur: number | null;
@@ -27,6 +31,10 @@ function mapRowToGame(row: GameRow): Game {
     title: row.title,
     platform: row.platform,
     region: row.region,
+    country: row.country,
+    productType: row.product_type,
+    operatingSystem: row.operating_system,
+    genre: row.genre,
     imageUrl: row.image_url,
     priceEur: Number(row.price_eur),
     oldPriceEur: row.old_price_eur ? Number(row.old_price_eur) : null,
@@ -53,6 +61,7 @@ export interface ListGamesResult {
 
 /**
  * Fetches games from Supabase with optional filters.
+ * Note: New filters (country, productType, operatingSystem, genre) are handled client-side.
  */
 export async function listGames(options: ListGamesOptions = {}): Promise<ListGamesResult> {
   const supabase = createServerClient();

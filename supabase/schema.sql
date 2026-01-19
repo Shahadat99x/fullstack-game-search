@@ -1,6 +1,6 @@
 -- =============================================================================
 -- SUPABASE SCHEMA: Game Search Application
--- Phase 2: Database schema with search foundation
+-- Phase 3: Full filters support
 -- =============================================================================
 
 -- Enable required extensions
@@ -15,6 +15,10 @@ CREATE TABLE IF NOT EXISTS public.games (
   title TEXT NOT NULL,
   platform TEXT NOT NULL,
   region TEXT NOT NULL,
+  country TEXT NOT NULL DEFAULT 'Lithuania',
+  product_type TEXT NOT NULL DEFAULT 'Game',
+  operating_system TEXT NOT NULL DEFAULT 'Windows',
+  genre TEXT NOT NULL DEFAULT 'Action',
   image_url TEXT NOT NULL,
   price_eur NUMERIC(10,2) NOT NULL,
   old_price_eur NUMERIC(10,2) NULL,
@@ -30,7 +34,13 @@ CREATE TABLE IF NOT EXISTS public.games (
   CONSTRAINT games_old_price_eur_valid CHECK (old_price_eur IS NULL OR old_price_eur >= price_eur),
   CONSTRAINT games_discount_percent_valid CHECK (discount_percent IS NULL OR (discount_percent >= 0 AND discount_percent <= 99)),
   CONSTRAINT games_cashback_eur_positive CHECK (cashback_eur IS NULL OR cashback_eur >= 0),
-  CONSTRAINT games_likes_positive CHECK (likes >= 0)
+  CONSTRAINT games_likes_positive CHECK (likes >= 0),
+  
+  -- Enum constraints for new filter columns
+  CONSTRAINT games_country_valid CHECK (country IN ('Lithuania','Poland','Germany','France','Spain','Italy','United Kingdom','United States')),
+  CONSTRAINT games_product_type_valid CHECK (product_type IN ('Game','DLC','Software')),
+  CONSTRAINT games_operating_system_valid CHECK (operating_system IN ('Windows','Mac','Linux')),
+  CONSTRAINT games_genre_valid CHECK (genre IN ('Action','RPG','Sports','Shooter','Adventure','Racing','Simulation'))
 );
 
 -- =============================================================================
@@ -54,6 +64,12 @@ CREATE INDEX IF NOT EXISTS games_price_eur_idx ON public.games (price_eur);
 
 -- Index for sorting by likes
 CREATE INDEX IF NOT EXISTS games_likes_idx ON public.games (likes DESC);
+
+-- Indexes for new filter columns
+CREATE INDEX IF NOT EXISTS games_country_idx ON public.games (country);
+CREATE INDEX IF NOT EXISTS games_product_type_idx ON public.games (product_type);
+CREATE INDEX IF NOT EXISTS games_operating_system_idx ON public.games (operating_system);
+CREATE INDEX IF NOT EXISTS games_genre_idx ON public.games (genre);
 
 -- =============================================================================
 -- TRIGGER: Auto-update updated_at timestamp
@@ -81,5 +97,9 @@ CREATE TRIGGER games_updated_at_trigger
 COMMENT ON TABLE public.games IS 'Game listings with pricing, discounts, and search support';
 COMMENT ON COLUMN public.games.platform IS 'Distribution platform: Steam, EA App, Xbox Live, PlayStation Network, Nintendo eShop, etc.';
 COMMENT ON COLUMN public.games.region IS 'License region: GLOBAL, EUROPE, etc.';
+COMMENT ON COLUMN public.games.country IS 'Store country: Lithuania, Poland, Germany, France, Spain, Italy, United Kingdom, United States';
+COMMENT ON COLUMN public.games.product_type IS 'Product type: Game, DLC, or Software';
+COMMENT ON COLUMN public.games.operating_system IS 'Operating system: Windows, Mac, or Linux';
+COMMENT ON COLUMN public.games.genre IS 'Game genre: Action, RPG, Sports, Shooter, Adventure, Racing, Simulation';
 COMMENT ON COLUMN public.games.discount_percent IS 'Discount percentage (0-99), NULL if no discount';
 COMMENT ON COLUMN public.games.cashback_eur IS 'Cashback amount in EUR, NULL if no cashback';

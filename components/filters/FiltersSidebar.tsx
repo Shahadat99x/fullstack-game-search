@@ -1,9 +1,18 @@
 'use client';
 
-import { FilterState, DEFAULT_FILTERS } from '@/types/filters';
+import {
+    FilterState,
+    DEFAULT_FILTERS,
+    PLATFORMS,
+    REGIONS,
+    COUNTRIES,
+    PRODUCT_TYPES,
+    OPERATING_SYSTEMS,
+    GENRES,
+} from '@/types/filters';
 import { FilterSection } from './FilterSection';
 import { PriceRangeFilter } from './PriceRangeFilter';
-import { PlatformsFilter } from './PlatformsFilter';
+import { CheckboxFilter } from './CheckboxFilter';
 import { RegionsFilter } from './RegionsFilter';
 
 interface FiltersSidebarProps {
@@ -11,28 +20,6 @@ interface FiltersSidebarProps {
     onFiltersChange: (filters: FilterState) => void;
     onClose?: () => void;
 }
-
-// UI-only placeholder data for visual parity with Eneba
-const PRODUCT_TYPES = [
-    { label: 'Games', count: 42994 },
-    { label: 'DLCs', count: 8521 },
-    { label: 'Software', count: 1245 },
-];
-
-const OPERATING_SYSTEMS = [
-    { label: 'Windows', count: 38420 },
-    { label: 'Mac', count: 4521 },
-    { label: 'Linux', count: 2845 },
-];
-
-const GENRES = [
-    { label: 'Action', count: 12450 },
-    { label: 'Adventure', count: 9823 },
-    { label: 'RPG', count: 7654 },
-    { label: 'Sports', count: 5432 },
-    { label: 'Simulation', count: 4321 },
-    { label: 'Strategy', count: 3987 },
-];
 
 export function FiltersSidebar({
     filters,
@@ -43,7 +30,11 @@ export function FiltersSidebar({
         filters.priceMin !== null ||
         filters.priceMax !== null ||
         filters.region !== null ||
-        filters.platforms.length > 0;
+        filters.platforms.length > 0 ||
+        filters.countries.length > 0 ||
+        filters.productTypes.length > 0 ||
+        filters.operatingSystems.length > 0 ||
+        filters.genres.length > 0;
 
     const handlePriceChange = (priceMin: number | null, priceMax: number | null) => {
         onFiltersChange({ ...filters, priceMin, priceMax });
@@ -55,6 +46,22 @@ export function FiltersSidebar({
 
     const handleRegionChange = (region: string | null) => {
         onFiltersChange({ ...filters, region });
+    };
+
+    const handleCountriesChange = (countries: string[]) => {
+        onFiltersChange({ ...filters, countries });
+    };
+
+    const handleProductTypesChange = (productTypes: string[]) => {
+        onFiltersChange({ ...filters, productTypes });
+    };
+
+    const handleOperatingSystemsChange = (operatingSystems: string[]) => {
+        onFiltersChange({ ...filters, operatingSystems });
+    };
+
+    const handleGenresChange = (genres: string[]) => {
+        onFiltersChange({ ...filters, genres });
     };
 
     return (
@@ -108,7 +115,7 @@ export function FiltersSidebar({
 
             {/* Filter Sections */}
             <div className="space-y-3">
-                {/* Price Range (Functional) */}
+                {/* Price Range */}
                 <FilterSection title="Price range (EUR)">
                     <PriceRangeFilter
                         priceMin={filters.priceMin}
@@ -117,98 +124,74 @@ export function FiltersSidebar({
                     />
                 </FilterSection>
 
-                {/* Country (UI-only placeholder) */}
-                <FilterSection title="Country" defaultExpanded={false}>
-                    <div className="relative">
-                        <select
-                            className="w-full h-10 px-3 pr-8 bg-black/20 text-white/80 text-sm
-                         border-0 outline-none appearance-none cursor-pointer"
-                            disabled
-                        >
-                            <option>All countries</option>
-                        </select>
-                        <svg
-                            className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M19 9l-7 7-7-7"
-                            />
-                        </svg>
-                    </div>
+                {/* Country */}
+                <FilterSection
+                    title="Country"
+                    defaultExpanded={false}
+                    badge={filters.countries.length > 0 ? filters.countries.length : undefined}
+                >
+                    <CheckboxFilter
+                        options={COUNTRIES}
+                        selected={filters.countries}
+                        onChange={handleCountriesChange}
+                        showSearch
+                        maxHeight="max-h-40"
+                    />
                 </FilterSection>
 
-                {/* Product Type (UI-only placeholder) */}
-                <FilterSection title="Product type" defaultExpanded={false}>
-                    <div className="space-y-2">
-                        {PRODUCT_TYPES.map((type) => (
-                            <label
-                                key={type.label}
-                                className="flex items-center justify-between cursor-not-allowed opacity-60"
-                            >
-                                <div className="flex items-center gap-3">
-                                    <div className="w-5 h-5 bg-black/20" />
-                                    <span className="text-sm text-white/70">{type.label}</span>
-                                </div>
-                                <span className="text-xs text-white/40">{type.count.toLocaleString()}</span>
-                            </label>
-                        ))}
-                    </div>
+                {/* Product Type */}
+                <FilterSection
+                    title="Product type"
+                    defaultExpanded={false}
+                    badge={filters.productTypes.length > 0 ? filters.productTypes.length : undefined}
+                >
+                    <CheckboxFilter
+                        options={PRODUCT_TYPES}
+                        selected={filters.productTypes}
+                        onChange={handleProductTypesChange}
+                    />
                 </FilterSection>
 
-                {/* Operating System (UI-only placeholder) */}
-                <FilterSection title="Operating system" defaultExpanded={false}>
-                    <div className="space-y-2">
-                        {OPERATING_SYSTEMS.map((os) => (
-                            <label
-                                key={os.label}
-                                className="flex items-center justify-between cursor-not-allowed opacity-60"
-                            >
-                                <div className="flex items-center gap-3">
-                                    <div className="w-5 h-5 bg-black/20" />
-                                    <span className="text-sm text-white/70">{os.label}</span>
-                                </div>
-                                <span className="text-xs text-white/40">{os.count.toLocaleString()}</span>
-                            </label>
-                        ))}
-                    </div>
+                {/* Operating System */}
+                <FilterSection
+                    title="Operating system"
+                    defaultExpanded={false}
+                    badge={filters.operatingSystems.length > 0 ? filters.operatingSystems.length : undefined}
+                >
+                    <CheckboxFilter
+                        options={OPERATING_SYSTEMS}
+                        selected={filters.operatingSystems}
+                        onChange={handleOperatingSystemsChange}
+                    />
                 </FilterSection>
 
-                {/* Platforms (Functional) */}
+                {/* Platforms */}
                 <FilterSection
                     title="Platforms"
                     badge={filters.platforms.length > 0 ? filters.platforms.length : undefined}
                 >
-                    <PlatformsFilter
-                        selectedPlatforms={filters.platforms}
+                    <CheckboxFilter
+                        options={PLATFORMS}
+                        selected={filters.platforms}
                         onChange={handlePlatformsChange}
+                        showSearch
                     />
                 </FilterSection>
 
-                {/* Genres (UI-only placeholder) */}
-                <FilterSection title="Genres" defaultExpanded={false}>
-                    <div className="space-y-2">
-                        {GENRES.map((genre) => (
-                            <label
-                                key={genre.label}
-                                className="flex items-center justify-between cursor-not-allowed opacity-60"
-                            >
-                                <div className="flex items-center gap-3">
-                                    <div className="w-5 h-5 bg-black/20" />
-                                    <span className="text-sm text-white/70">{genre.label}</span>
-                                </div>
-                                <span className="text-xs text-white/40">{genre.count.toLocaleString()}</span>
-                            </label>
-                        ))}
-                    </div>
+                {/* Genres */}
+                <FilterSection
+                    title="Genres"
+                    defaultExpanded={false}
+                    badge={filters.genres.length > 0 ? filters.genres.length : undefined}
+                >
+                    <CheckboxFilter
+                        options={GENRES}
+                        selected={filters.genres}
+                        onChange={handleGenresChange}
+                    />
                 </FilterSection>
 
-                {/* Regions (Functional) */}
+                {/* Regions */}
                 <FilterSection
                     title="Regions"
                     badge={filters.region !== null ? 1 : undefined}
