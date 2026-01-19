@@ -18,6 +18,7 @@ export const PLATFORMS = [
   'Battle.net',
   'Ubisoft Connect',
   'GOG',
+  'Rockstar',
 ] as const;
 
 export const REGIONS = ['GLOBAL', 'EUROPE'] as const;
