@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Header } from '@/components/Header';
-import { FilterSidebar } from '@/components/FilterSidebar';
+import { FiltersSidebar } from '@/components/filters/FiltersSidebar';
 import { SortDropdown } from '@/components/SortDropdown';
 import { ResultsSummary } from '@/components/ResultsSummary';
 import { GameGrid } from '@/components/GameGrid';
@@ -99,7 +99,7 @@ export default function Home() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Filter Sidebar - Desktop */}
           <div className="hidden lg:block">
-            <FilterSidebar filters={filters} onFiltersChange={handleFiltersChange} />
+            <FiltersSidebar filters={filters} onFiltersChange={handleFiltersChange} />
           </div>
 
           {/* Mobile Filter Overlay */}
@@ -110,7 +110,7 @@ export default function Home() {
                 onClick={() => setShowMobileFilters(false)}
               />
               <div className="absolute inset-y-0 left-0 w-80 max-w-full bg-[var(--bg-primary)] p-4 overflow-y-auto">
-                <FilterSidebar
+                <FiltersSidebar
                   filters={filters}
                   onFiltersChange={handleFiltersChange}
                   onClose={() => setShowMobileFilters(false)}
