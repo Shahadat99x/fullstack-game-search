@@ -60,12 +60,12 @@ beforeEach(() => {
 describe('Home Page', () => {
   it('renders header with brand', async () => {
     render(<Home />);
-    expect(screen.getByText('eneba')).toBeInTheDocument();
+    expect(screen.getByLabelText('Eneba')).toBeInTheDocument();
   });
 
   it('renders search input', async () => {
     render(<Home />);
-    const searchInput = screen.getByRole('textbox', { name: /search games/i });
+    const searchInput = screen.getByRole('combobox', { name: /search games/i });
     expect(searchInput).toBeInTheDocument();
   });
 

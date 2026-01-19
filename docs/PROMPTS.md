@@ -54,3 +54,38 @@ This file tracks prompts used during development.
 ## Phase 4: Deployment (TODO)
 
 _To be populated_
+
+---
+
+## Phase 5: Search Typeahead (Eneba-like Autocomplete)
+
+**Tasks completed:**
+
+- Observed Eneba's live search UI patterns (dropdown structure, colors, interactions)
+- Added CSS design tokens for typeahead: `--bg-hover`, `--bg-dropdown`, `--accent-teal`
+- Added optional `limit` query parameter to `/api/list` for suggestion limits
+- Created `SearchSuggestionRow.tsx` component (query variation suggestions)
+- Created `SearchOfferRow.tsx` component (offer suggestions with thumbnail, badge, price)
+- Created `SearchAutocomplete.tsx` main component:
+  - ARIA combobox pattern for accessibility
+  - Debounced API fetch (150ms) for offer suggestions
+  - Query suggestions generated from suffixes (steam, xbox, playstation, etc.)
+  - Keyboard navigation (ArrowUp/Down, Enter, Escape)
+  - Click outside closes dropdown
+  - Clear button support
+- Updated `Header.tsx` to use `SearchAutocomplete` instead of `SearchBar`
+- Created comprehensive tests in `components/__tests__/SearchAutocomplete.test.tsx`
+
+**API endpoints (unchanged):**
+
+- `GET /list` — returns all games
+- `GET /list?search=<term>` — searches by title (ILIKE)
+- `GET /list?search=<term>&limit=8` — searches with limited results (for autocomplete)
+
+**Components added:**
+
+- `components/SearchAutocomplete.tsx`
+- `components/SearchSuggestionRow.tsx`
+- `components/SearchOfferRow.tsx`
+- `components/__tests__/SearchAutocomplete.test.tsx`
+

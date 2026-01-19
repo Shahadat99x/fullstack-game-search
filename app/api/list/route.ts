@@ -3,6 +3,7 @@ import { listGames } from '@/lib/games/repo';
 import { SortOption } from '@/types/filters';
 
 const MAX_SEARCH_LENGTH = 80;
+const MAX_LIMIT = 100;
 const VALID_SORTS: SortOption[] = ['popularity', 'price_asc', 'price_desc', 'discount'];
 
 export async function GET(request: NextRequest) {
@@ -16,6 +17,7 @@ export async function GET(request: NextRequest) {
     const region = searchParams.get('region');
     const platformsStr = searchParams.get('platforms');
     const sortStr = searchParams.get('sort') as SortOption | null;
+    const limitStr = searchParams.get('limit');
 
     // Validate search length
     if (search.length > MAX_SEARCH_LENGTH) {
@@ -43,6 +45,16 @@ export async function GET(request: NextRequest) {
     // Validate sort
     const sort = sortStr && VALID_SORTS.includes(sortStr) ? sortStr : 'popularity';
 
+    // Parse and validate limit (for autocomplete suggestions)
+    let limit: number | undefined;
+    if (limitStr) {
+      const parsedLimit = parseInt(limitStr, 10);
+      if (isNaN(parsedLimit) || parsedLimit < 1) {
+        return NextResponse.json({ error: 'Invalid limit value' }, { status: 400 });
+      }
+      limit = Math.min(parsedLimit, MAX_LIMIT);
+    }
+
     const result = await listGames({
       search,
       priceMin,
@@ -51,6 +63,14 @@ export async function GET(request: NextRequest) {
       platforms,
       sort,
     });
+
+    // Apply limit if specified (client-side slice for autocomplete)
+    if (limit && result.items.length > limit) {
+      return NextResponse.json({
+        count: result.count, // Keep original count for "Results found"
+        items: result.items.slice(0, limit),
+      });
+    }
 
     return NextResponse.json(result);
   } catch (error) {

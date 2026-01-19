@@ -1,14 +1,19 @@
 @import 'tailwindcss';
 
+@theme {
+  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+}
+
 /* ============================================
    ENEBA DESIGN TOKENS - Refined
    ============================================ */
 :root {
   /* Eneba Backgrounds */
-  --bg-page: #4321b0;
-  /* Vibrant purple from user screenshot */
-  --bg-card: #2a1a5e;
-  /* Darker purple for cards */
+  --bg-page: #4618ac;
+  /* Deep Eneba Purple */
+  --bg-card: #1f0a4d;
+  /* Darker Card Purple */
 
   /* Text */
   --text-white: #ffffff;
@@ -21,6 +26,14 @@
   /* Eneba CTA Yellow */
   --accent-orange: #ff6b35;
   /* Discount Orange */
+  --accent-teal: #23c299;
+  /* Digital good badge */
+
+  /* Typeahead */
+  --bg-hover: #5825cc;
+  /* Hover state purple */
+  --bg-dropdown: #4618ac;
+  /* Dropdown background */
 }
 
 /* ============================================
@@ -31,7 +44,7 @@ body {
   /* Optional gradient based on observation */
   background: linear-gradient(180deg, #5a31f4 0%, #4321b0 100%);
   color: var(--text-white);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  font-family: var(--font-montserrat), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   min-height: 100vh;
 }
 

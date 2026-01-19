@@ -35,18 +35,18 @@ export function GameCard({ game }: GameCardProps) {
   const regionColor = getRegionColor(game.region);
 
   return (
-    <article className="group relative flex flex-col h-[480px] bg-[#392b6b] rounded-[14px] overflow-hidden hover:shadow-2xl hover:shadow-black/50 transition-all duration-300 transform-gpu translate-z-0">
+    <article className="group relative flex flex-col h-[480px] bg-[#1f0a4d] rounded-none overflow-hidden hover:shadow-2xl hover:shadow-black/50 transition-all duration-300 transform-gpu translate-z-0">
 
       {/* 
         IMAGE SECTION - Fixed Height
         Must be BEHIND the sliding content on hover.
       */}
-      <div className="relative h-[313px] w-full bg-[#201040] z-0 shrink-0">
+      <div className="relative h-[313px] w-full bg-[#150530] z-0 shrink-0">
         <Image
           src={game.imageUrl}
           alt={game.title}
           fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          className="object-cover transition-none"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           priority={false}
         />
@@ -60,7 +60,7 @@ export function GameCard({ game }: GameCardProps) {
           </button>
         </div>
 
-        {/* Cashback Badge - Persistent on Image */}
+        {/* Cashback Badge - Persistent on Image, Top Left */}
         {game.cashbackEur && game.cashbackEur > 0 && (
           <div className="absolute bottom-2 left-2 z-10 transition-opacity duration-300 group-hover:opacity-0">
             <div className="flex items-center gap-1.5 pl-1.5 pr-2.5 py-1 rounded-full bg-[#00d68f] text-white shadow-md">
@@ -71,15 +71,6 @@ export function GameCard({ game }: GameCardProps) {
             </div>
           </div>
         )}
-
-        {/* Discount Badge - Top Right */}
-        {game.discountPercent && game.discountPercent > 0 && (
-          <div className="absolute top-2 right-2 z-10">
-            <span className="px-1.5 py-0.5 rounded text-xs font-bold bg-[#ff6b35] text-white shadow-sm">
-              -{game.discountPercent}%
-            </span>
-          </div>
-        )}
       </div>
 
       {/* 
@@ -87,10 +78,10 @@ export function GameCard({ game }: GameCardProps) {
         This entire block slides UP over the image on hover using negative margin or transform.
         Using absolute layout relative to card bottom.
       */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 bg-[#392b6b] flex flex-col transform transition-transform duration-300 ease-out group-hover:-translate-y-[80px]">
+      <div className="absolute bottom-0 left-0 right-0 z-10 bg-[#1f0a4d] flex flex-col transform transition-transform duration-300 ease-out group-hover:-translate-y-[110px]">
 
         {/* Platform Bar - Top of the content block */}
-        <div className="flex items-center w-full px-3 py-1.5 bg-black/40 backdrop-blur-[2px]">
+        <div className="flex items-center w-full px-3 py-1.5 bg-[#140633]">
           <span className="w-4 h-4 flex items-center justify-center text-[10px] font-black bg-white text-black rounded-sm mr-2">
             {platformInfo.icon.charAt(0)}
           </span>
@@ -100,9 +91,9 @@ export function GameCard({ game }: GameCardProps) {
         </div>
 
         {/* Text Info Section - Fixed height area to form the bottom of card */}
-        <div className="p-3 pb-4 flex flex-col gap-1 bg-[#392b6b] min-h-[167px]">
+        <div className="p-3 pb-4 flex flex-col gap-1 bg-[#1f0a4d] min-h-[167px]">
           {/* Title */}
-          <h3 className="text-[16px] font-bold text-white leading-tight line-clamp-2 min-h-[40px] mb-1 group-hover:underline decoration-2 underline-offset-2">
+          <h3 className="text-[16px] font-extrabold text-white leading-tight line-clamp-2 min-h-[40px] mb-1 group-hover:underline decoration-2 underline-offset-2">
             {game.title}
           </h3>
 
@@ -144,7 +135,7 @@ export function GameCard({ game }: GameCardProps) {
             Attached to bottom of content block.
             Revealed when block slides up.
         */}
-        <div className="px-3 pb-3 flex flex-col gap-2 bg-[#392b6b] absolute top-full left-0 right-0 h-[120px]">
+        <div className="px-3 pb-3 flex flex-col gap-2 bg-[#1f0a4d] absolute top-full left-0 right-0 h-[120px]">
           {/* Primary: Add to Cart (Yellow) */}
           <button className="w-full py-3 rounded-lg bg-[#ffc800] hover:bg-[#ffe066] text-black text-[15px] font-extrabold shadow-md transition-colors flex items-center justify-center gap-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
