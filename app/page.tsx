@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Header } from '@/components/Header';
+import { SubNavigation } from '@/components/SubNavigation';
+import { PageHeading } from '@/components/PageHeading';
 import { FiltersSidebar } from '@/components/filters/FiltersSidebar';
 import { SortDropdown } from '@/components/SortDropdown';
 import { ResultsSummary } from '@/components/ResultsSummary';
@@ -144,8 +146,14 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <Header onSearch={handleSearch} />
+      <SubNavigation />
 
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+      {/* Page Heading */}
+      <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
+        <PageHeading />
+      </div>
+
+      <main className="mx-auto max-w-7xl px-4 pb-6 sm:px-6 lg:px-8">
         {/* Mobile Filter Toggle */}
         <button
           onClick={() => setShowMobileFilters(true)}

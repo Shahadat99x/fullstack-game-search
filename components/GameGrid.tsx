@@ -33,7 +33,7 @@ export function GameGrid({ games }: GameGridProps) {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4 max-w-[1240px] mx-auto auto-rows-fr">
+    <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4 max-w-[1240px] mx-auto auto-rows-fr">
       {games.map((game) => (
         <GameCard key={game.id} game={game} />
       ))}
