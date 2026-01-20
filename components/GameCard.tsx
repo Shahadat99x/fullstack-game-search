@@ -21,11 +21,11 @@ function getPlatformInfo(platform: string): { label: string; icon: string; bgCol
   return mapping[platform] || { label: platform, icon: '?', bgColor: 'bg-gray-600', textColor: 'text-white' };
 }
 
-// Helper for region color
+// Helper for region color (cyan for GLOBAL like Eneba)
 function getRegionColor(region: string): string {
   const r = region.toUpperCase();
   if (r.includes('EUROPE')) return 'text-[#d63384]';
-  if (r.includes('GLOBAL')) return 'text-[#00ffff]';
+  if (r.includes('GLOBAL')) return 'text-cyan-400';
   if (r.includes('UNITED STATES')) return 'text-[#ffc107]';
   return 'text-[#00d68f]';
 }
@@ -36,18 +36,18 @@ export function GameCard({ game }: GameCardProps) {
   const regionColor = getRegionColor(game.region);
 
   return (
-    <article className="group relative flex flex-col h-[480px] bg-[#1f0a4d] rounded-lg overflow-hidden border border-white/10 hover:border-white/25 hover:shadow-2xl hover:shadow-black/50 transition-all duration-300 transform-gpu translate-z-0">
+    <article className="group relative flex flex-col bg-[#1f0a4d] rounded-md overflow-hidden border border-white/5 hover:border-white/20 shadow-md hover:shadow-xl hover:shadow-black/40 transition-all duration-300 hover:-translate-y-1">
 
       {/* 
-        IMAGE SECTION - Fixed Height
+        IMAGE SECTION - Fixed aspect ratio for uniform cards
         Contains the image, cashback badge, and platform bar (floating on top of image)
       */}
-      <div className="relative h-[313px] w-full bg-[#150530] z-0 shrink-0">
+      <div className="relative aspect-[3/4] w-full bg-[#150530] shrink-0">
         <Image
           src={game.imageUrl}
           alt={game.title}
           fill
-          className="object-cover transition-none"
+          className="object-cover"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           priority={false}
         />
@@ -61,24 +61,21 @@ export function GameCard({ game }: GameCardProps) {
           </button>
         </div>
 
-        {/* Cashback Badge - Solid Pill on Image (Eneba-style) - ABOVE platform bar */}
+        {/* Cashback Badge - Glassy teal pill on Image (Eneba-style) */}
         {game.cashbackEur && game.cashbackEur > 0 && (
-          <div className="absolute bottom-12 left-3 z-20 transition-opacity duration-300 group-hover:opacity-0">
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#00d68f] text-white shadow-lg">
-              <div className="w-4 h-4 flex items-center justify-center rounded-full border-2 border-white">
-                <span className="text-[10px] font-bold leading-none">+</span>
-              </div>
-              <span className="text-[11px] font-bold tracking-wide uppercase">CASHBACK</span>
+          <div className="absolute bottom-10 left-2 z-20 transition-opacity duration-300 group-hover:opacity-0">
+            <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-teal-500/80 backdrop-blur-md border border-white/20 text-white shadow-lg">
+              <span className="text-[10px] font-bold tracking-wide uppercase">CASHBACK</span>
             </div>
           </div>
         )}
 
-        {/* Platform Bar - Floating ON the image bottom (Eneba-style) */}
-        <div className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-center w-full h-9 bg-black/50 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-0">
-          <span className={`w-5 h-5 flex items-center justify-center text-[10px] font-black rounded-full mr-2 ${platformInfo.bgColor} ${platformInfo.textColor}`}>
+        {/* Platform Bar - Glass bar floating ON the image bottom (Eneba-style) */}
+        <div className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-center h-7 bg-black/50 backdrop-blur-sm transition-opacity duration-300 group-hover:opacity-0">
+          <span className={`w-4 h-4 flex items-center justify-center text-[9px] font-black rounded-sm mr-1.5 ${platformInfo.bgColor} ${platformInfo.textColor}`}>
             {platformInfo.icon}
           </span>
-          <span className="text-[12px] font-medium text-white uppercase tracking-wide">
+          <span className="text-[11px] font-medium text-white/90 tracking-wide">
             {platformInfo.label}
           </span>
         </div>
@@ -88,58 +85,58 @@ export function GameCard({ game }: GameCardProps) {
         CONTENT + BUTTONS WRAPPER 
         This entire block slides UP over the image on hover.
       */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 bg-[#1f0a4d] flex flex-col transform transition-transform duration-300 ease-out group-hover:-translate-y-[110px]">
+      <div className="relative flex-1 flex flex-col bg-[#1f0a4d] transform transition-transform duration-300 ease-out group-hover:-translate-y-[100px]">
 
         {/* Text Info Section */}
-        <div className="p-3 pb-4 flex flex-col gap-1 bg-[#1f0a4d] min-h-[167px]">
+        <div className="p-3 flex flex-col gap-0.5">
           {/* Title */}
-          <h3 className="text-[15px] font-bold text-white leading-tight line-clamp-2 min-h-[40px] mb-1 group-hover:underline decoration-2 underline-offset-2">
+          <h3 className="text-sm font-bold text-white leading-tight line-clamp-2 min-h-[36px] group-hover:underline decoration-1 underline-offset-2">
             {game.title}
           </h3>
 
           {/* Region */}
-          <div className={`text-[11px] font-bold uppercase tracking-wider mb-auto ${regionColor}`}>
+          <div className={`text-[10px] font-bold uppercase tracking-wider ${regionColor}`}>
             {game.region}
           </div>
 
-          {/* Price Section - LEFT ALIGNED */}
-          <div className="mt-3 flex flex-col items-start relative">
+          {/* Price Section */}
+          <div className="mt-2 flex flex-col items-start">
             {/* Old Price row */}
             {game.oldPriceEur && (
-              <div className="text-[12px] text-gray-400 font-medium">
-                From <span className="line-through">{formatPrice(game.oldPriceEur)}</span> <span className="text-[#00d68f]">-{game.discountPercent}%</span>
+              <div className="text-[10px] text-gray-400">
+                From <span className="line-through">{formatPrice(game.oldPriceEur)}</span> <span className="text-cyan-400">-{game.discountPercent}%</span>
               </div>
             )}
 
             {/* Main Price */}
-            <div className="text-[24px] font-extrabold text-white leading-none mt-1">
-              {formatPrice(game.priceEur)} <span className="text-[11px] text-gray-400 font-normal align-top ml-0.5">ⓘ</span>
+            <div className="text-lg font-bold text-white leading-none mt-0.5">
+              {formatPrice(game.priceEur)}
             </div>
 
             {/* Cashback Value */}
             {game.cashbackEur && game.cashbackEur > 0 && (
-              <div className="text-[11px] text-[#00d68f] mt-1 font-medium">
+              <div className="text-[10px] text-[#00d68f] mt-0.5 font-medium">
                 Cashback: <span className="font-bold">€{game.cashbackEur.toFixed(2)}</span>
               </div>
             )}
           </div>
 
           {/* Likes Count */}
-          <div className="flex items-center gap-1.5 text-gray-400 mt-3">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-            <span className="text-xs font-medium">{game.likes}</span>
+          <div className="flex items-center gap-1 text-gray-400 mt-2">
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+            <span className="text-[11px] font-medium">{game.likes}</span>
           </div>
         </div>
 
         {/* Buttons - Hidden below initially, revealed on hover */}
-        <div className="px-3 pb-3 flex flex-col gap-2 bg-[#1f0a4d] absolute top-full left-0 right-0 h-[120px]">
+        <div className="px-3 pb-3 flex flex-col gap-2 absolute top-full left-0 right-0 h-[100px] bg-[#1f0a4d]">
           {/* Primary: Add to Cart (Yellow) - NO cart icon like Eneba */}
-          <button className="w-full py-3 rounded-lg bg-[#ffc800] hover:bg-[#ffe066] text-black text-[15px] font-extrabold shadow-md transition-colors">
+          <button className="w-full py-2.5 rounded-md bg-[#ffc800] hover:bg-[#ffe066] text-black text-sm font-bold shadow-md transition-colors">
             Add to cart
           </button>
 
           {/* Secondary: Explore Options (Yellow with border like Eneba) */}
-          <button className="w-full py-2.5 rounded-lg bg-[#ffc800]/10 border-2 border-[#ffc800] hover:bg-[#ffc800]/20 text-[#ffc800] text-[14px] font-bold transition-colors">
+          <button className="w-full py-2 rounded-md bg-transparent border border-[#ffc800] hover:bg-[#ffc800]/10 text-[#ffc800] text-[13px] font-semibold transition-colors">
             Explore options
           </button>
         </div>
