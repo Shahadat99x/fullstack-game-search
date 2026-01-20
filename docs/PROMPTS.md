@@ -1,127 +1,100 @@
-# Prompts Log
+# Development Summary (Non-verbatim)
 
-This file tracks prompts used during development.
+This file is a high-level summary of the development phases and deliverables (not a prompt transcript).
+AI prompt history is documented separately in `docs/AI_PROMPT_HISTORY.md`.
 
 ---
 
 ## Phase 1: Foundation + UI Shell
 
-**Tasks completed:**
-
+**Deliverables:**
 - Initialized Next.js App Router with TypeScript + Tailwind CSS
 - Configured ESLint + Prettier
 - Set up Vitest + React Testing Library
-- Created UI components: Header, SearchBar, ResultsSummary, GameCard, GameGrid
-- Created mock data with 15 games
-- Added documentation stubs
+- Built initial UI shell and core components (Header, search, results grid, game card)
+- Started with temporary mock data for UI iteration (later replaced by Supabase seed)
 
 ---
 
 ## Phase 2: Data Layer (Supabase)
 
-**Tasks completed:**
-
+**Deliverables:**
 - Created Supabase PostgreSQL schema (`supabase/schema.sql`)
-- Enabled `pg_trgm` extension for fuzzy search
-- Added data quality constraints (CHECK constraints)
-- Created indexes for search optimization
-- Created seed data with 20 games (`supabase/seed.sql`)
-- Created setup documentation (`supabase/README.md`)
+- Added data quality constraints and indexes for filtering/search
+- Seeded data in `supabase/seed.sql`:
+  - **6 games, 51 offers total** (verified in `VERIFICATION_REPORT.md`)
+  - Required games included: **FIFA 23**, **Red Dead Redemption 2**, **Split Fiction**
+- Added setup documentation (`supabase/README.md`)
 
 ---
 
 ## Phase 3: API Integration
 
-**Tasks completed:**
-
-- Installed @supabase/supabase-js
+**Deliverables:**
+- Installed `@supabase/supabase-js`
 - Created server-side Supabase client (`lib/supabase/server.ts`)
-- Created games repository with snake_case to camelCase mapping (`lib/games/repo.ts`)
-- Created API route handler (`app/api/list/route.ts`)
-- Added URL rewrite /list → /api/list in next.config.ts
-- Updated SearchBar with debounce (300ms) support
-- Updated page.tsx with fetch, loading, error states
-- Created LoadingSpinner and ErrorMessage components
-- Updated tests with fetch mocking
+- Implemented repository layer (`lib/games/repo.ts`)
+- Implemented API route handler (`app/api/list/route.ts`)
+- Added URL rewrite `/list → /api/list` in `next.config.ts`
 
-**API endpoints:**
-
-- `GET /list` — returns all games
-- `GET /list?search=<term>` — searches by title (ILIKE)
+**Public API endpoints:**
+- `GET /list` — returns all offers
+- `GET /list?search=<term>` — searches by title (supports fuzzy search via RPC; see Phase 6)
+- `GET /list?search=<term>&limit=<n>` — optional limit (used for autocomplete)
 
 ---
 
 ## Phase 4: UI Polish + Deployment
 
-**Tasks completed:**
-
-- Applied Eneba-style visual polish to GameCard:
-  - Changed image aspect ratio to `aspect-[3/4]` (portrait, consistent)
-  - Reduced corner radius from `rounded-xl` to `rounded-md`
-  - Glassy teal cashback pill with `backdrop-blur-md`
-  - Glass platform bar with `bg-black/50 backdrop-blur-sm`
-  - Tightened typography spacing
-  - Added subtle hover lift (`hover:-translate-y-1`) + shadow enhancement
-  - Added hover border (`hover:border-white/20`)
-- Verified lint (0 errors), tests (14 passed), and build (success)
-- Updated README with Vercel deployment steps
-- Created submission documentation
+**Deliverables:**
+- Applied Eneba-style visual polish to the game cards and results page:
+  - Portrait cover ratio (`aspect-[3/4]`)
+  - Tighter spacing and typography
+  - Cashback pill + platform/region styling with subtle glass effects
+  - Hover lift + shadow enhancement
+- Deployed to Vercel and verified images load in production
+- Verification (final):
+  - Lint ✅ (0 errors; warnings only)
+  - Tests ✅ **15/15**
+  - Build ✅ (see `VERIFICATION_REPORT.md`)
 
 ---
 
 ## Phase 5: Search Typeahead (Eneba-like Autocomplete)
 
-**Tasks completed:**
-
-- Observed Eneba's live search UI patterns (dropdown structure, colors, interactions)
-- Added CSS design tokens for typeahead: `--bg-hover`, `--bg-dropdown`, `--accent-teal`
-- Added optional `limit` query parameter to `/api/list` for suggestion limits
-- Created `SearchSuggestionRow.tsx` component (query variation suggestions)
-- Created `SearchOfferRow.tsx` component (offer suggestions with thumbnail, badge, price)
-- Created `SearchAutocomplete.tsx` main component:
+**Deliverables:**
+- Implemented autocomplete dropdown with:
   - ARIA combobox pattern for accessibility
-  - Debounced API fetch (150ms) for offer suggestions
-  - Query suggestions generated from suffixes (steam, xbox, playstation, etc.)
-  - Keyboard navigation (ArrowUp/Down, Enter, Escape)
-  - Click outside closes dropdown
-  - Clear button support
-- Updated `Header.tsx` to use `SearchAutocomplete` instead of `SearchBar`
-- Created comprehensive tests in `components/__tests__/SearchAutocomplete.test.tsx`
+  - Debounced fetching for suggestions
+  - Keyboard navigation (Up/Down/Enter/Escape)
+  - Click-outside close and clear button
+- Added tests for main autocomplete interactions
 
-**API endpoints (unchanged):**
-
-- `GET /list` — returns all games
-- `GET /list?search=<term>` — searches by title (ILIKE)
-- `GET /list?search=<term>&limit=8` — searches with limited results (for autocomplete)
-
-**Components added:**
-
+**Key files:**
 - `components/SearchAutocomplete.tsx`
-- `components/SearchSuggestionRow.tsx`
-- `components/SearchOfferRow.tsx`
 - `components/__tests__/SearchAutocomplete.test.tsx`
 
 ---
 
 ## Phase 6: Fuzzy Search RPC (pg_trgm)
 
-**Tasks completed:**
+**Deliverables:**
+- Added Postgres fuzzy search using `pg_trgm` + Supabase RPC:
+  - Migration: `supabase/migrations/20260120_search_games_fuzzy.sql`
+  - RPC function: `search_games_fuzzy()`
+  - Uses `similarity()` with threshold **0.1** for short queries (e.g., “red ded”)
+- Updated backend search logic:
+  - Alias mapping (e.g., `rdr2` → “Red Dead Redemption 2”)
+  - Query normalization
+  - RPC call with ILIKE fallback if needed
 
-- Created SQL migration `supabase/migrations/20260120_search_games_fuzzy.sql`:
-  - Enabled `pg_trgm` extension
-  - Created `search_games_fuzzy()` RPC function
-  - Uses `similarity()` function with 0.1 threshold for typo tolerance
-  - Supports all filters (price, region, platforms, sorting)
-- Updated `lib/games/repo.ts`:
-  - Added alias mapping (rdr2 → "Red Dead Redemption 2", gta5 → "GTA V", etc.)
-  - Added query normalization (trim, collapse spaces)
-  - Calls RPC for fuzzy search, falls back to ILIKE if RPC fails
-- Fixed RPC signature to pass empty arrays instead of null for better type safety
+**Key files:**
+- `supabase/migrations/20260120_search_games_fuzzy.sql`
+- `lib/games/repo.ts`
+- `app/api/list/route.ts`
 
-**Fuzzy search examples:**
+---
 
-- `"red ded"` → matches "Red Dead Redemption 2" (similarity: 0.16)
-- `"rdr2"` → alias expands to "Red Dead Redemption 2"
-- `"witcher"` → matches "The Witcher 3: Wild Hunt"
-
-**Key insight:** PostgreSQL's `%` operator has default threshold of 0.3, but short queries against long titles score lower. Solution: use explicit `similarity(title, query) > 0.1` check.
+## References
+- AI prompt history: `docs/AI_PROMPT_HISTORY.md`
+- Verification report: `VERIFICATION_REPORT.md`
