@@ -101,3 +101,27 @@ This file tracks prompts used during development.
 - `components/SearchOfferRow.tsx`
 - `components/__tests__/SearchAutocomplete.test.tsx`
 
+---
+
+## Phase 6: Fuzzy Search RPC (pg_trgm)
+
+**Tasks completed:**
+
+- Created SQL migration `supabase/migrations/20260120_search_games_fuzzy.sql`:
+  - Enabled `pg_trgm` extension
+  - Created `search_games_fuzzy()` RPC function
+  - Uses `similarity()` function with 0.1 threshold for typo tolerance
+  - Supports all filters (price, region, platforms, sorting)
+- Updated `lib/games/repo.ts`:
+  - Added alias mapping (rdr2 → "Red Dead Redemption 2", gta5 → "GTA V", etc.)
+  - Added query normalization (trim, collapse spaces)
+  - Calls RPC for fuzzy search, falls back to ILIKE if RPC fails
+- Fixed RPC signature to pass empty arrays instead of null for better type safety
+
+**Fuzzy search examples:**
+
+- `"red ded"` → matches "Red Dead Redemption 2" (similarity: 0.16)
+- `"rdr2"` → alias expands to "Red Dead Redemption 2"
+- `"witcher"` → matches "The Witcher 3: Wild Hunt"
+
+**Key insight:** PostgreSQL's `%` operator has default threshold of 0.3, but short queries against long titles score lower. Solution: use explicit `similarity(title, query) > 0.1` check.

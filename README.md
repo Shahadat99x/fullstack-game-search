@@ -2,7 +2,7 @@
 
 A full-stack game search application built with Next.js, TypeScript, Tailwind CSS, and Supabase.
 
-> **🔗 Live Demo:** [YOUR_LIVE_URL_HERE](YOUR_LIVE_URL_HERE)
+> **🔗 Live Demo:** [https://enebasearch.vercel.app](https://enebasearch.vercel.app)
 
 ## 🚀 Getting Started
 
