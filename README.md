@@ -84,13 +84,33 @@ GET /list?search=<term>
 GET /api/list?search=<term>
 ```
 
-Searches games by title (case-insensitive partial match).
+Searches games by title with **fuzzy matching** (typo-tolerant) using PostgreSQL's `pg_trgm` extension.
+
+**Features:**
+- Typo tolerance: `"red ded"` → matches "Red Dead Redemption 2"
+- Alias support: `"rdr2"` → searches for "Red Dead Redemption 2"
+- Case-insensitive partial matching
+- Results ordered by similarity score
+
+**Supported Aliases:**
+| Alias | Expands To |
+|-------|------------|
+| `rdr2` | Red Dead Redemption 2 |
+| `gta5`, `gtav` | GTA V |
+| `witcher3` | The Witcher 3 |
+| `fh5` | Forza Horizon 5 |
 
 **Examples:**
 
 ```bash
+# Exact search
 curl "http://localhost:3000/list?search=fifa"
-curl "http://localhost:3000/list?search=red%20dead"
+
+# Fuzzy search (typo-tolerant)
+curl "http://localhost:3000/list?search=red%20ded"
+
+# Alias search
+curl "http://localhost:3000/list?search=rdr2"
 ```
 
 ## 📦 Scripts

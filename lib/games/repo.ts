@@ -60,8 +60,30 @@ export interface ListGamesResult {
 }
 
 /**
+ * Common game title aliases for better search UX
+ */
+const SEARCH_ALIASES: Record<string, string> = {
+  'rdr2': 'red dead redemption 2',
+  'rdr': 'red dead redemption',
+  'gta5': 'gta v',
+  'gtav': 'gta v',
+  'gta 5': 'gta v',
+  'witcher3': 'witcher 3',
+  'witcher 3': 'the witcher 3',
+  'fh5': 'forza horizon 5',
+};
+
+/**
+ * Normalizes search query: trim, collapse spaces, apply aliases
+ */
+function normalizeSearchQuery(query: string): string {
+  const normalized = query.trim().toLowerCase().replace(/\s+/g, ' ');
+  return SEARCH_ALIASES[normalized] || query.trim();
+}
+
+/**
  * Fetches games from Supabase with optional filters.
- * Note: New filters (country, productType, operatingSystem, genre) are handled client-side.
+ * Uses fuzzy search (pg_trgm) for search queries >= 2 characters.
  */
 export async function listGames(options: ListGamesOptions = {}): Promise<ListGamesResult> {
   const supabase = createServerClient();
@@ -75,12 +97,41 @@ export async function listGames(options: ListGamesOptions = {}): Promise<ListGam
     limit = 100,
   } = options;
 
-  let query = supabase.from('games').select('*').limit(Math.min(limit, 100));
+  const normalizedSearch = search ? normalizeSearchQuery(search) : null;
+  const effectiveLimit = Math.min(limit, 100);
 
-  // Search filter
-  if (search && search.trim().length > 0) {
-    const searchTerm = search.trim();
-    query = query.ilike('title', `%${searchTerm}%`);
+  // Use fuzzy search RPC for queries >= 2 characters
+  if (normalizedSearch && normalizedSearch.length >= 2) {
+    const { data, error } = await supabase.rpc('search_games_fuzzy', {
+      search_term: normalizedSearch,
+      min_price: priceMin ?? null,
+      max_price: priceMax ?? null,
+      region_filter: region ?? null,
+      platform_filters: platforms && platforms.length > 0 ? platforms : null,
+      sort_by: sort,
+      result_limit: effectiveLimit,
+    });
+
+    if (error) {
+      console.error('[listGames] Fuzzy search RPC error:', {
+        message: error.message,
+        code: error.code,
+      });
+
+      // Fallback to ILIKE if RPC fails (e.g., function not yet deployed)
+      console.warn('[listGames] Falling back to ILIKE search');
+    } else if (data) {
+      const items = (data as GameRow[]).map(mapRowToGame);
+      return { count: items.length, items };
+    }
+  }
+
+  // Fallback: standard query with ILIKE (for short queries or RPC fallback)
+  let query = supabase.from('games').select('*').limit(effectiveLimit);
+
+  // Search filter (ILIKE)
+  if (normalizedSearch && normalizedSearch.length > 0) {
+    query = query.ilike('title', `%${normalizedSearch}%`);
   }
 
   // Price filters

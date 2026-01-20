@@ -62,6 +62,7 @@ export async function GET(request: NextRequest) {
       region: region || undefined,
       platforms,
       sort,
+      limit,
     });
 
     // Apply limit if specified (client-side slice for autocomplete)

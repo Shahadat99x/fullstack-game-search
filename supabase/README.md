@@ -23,7 +23,15 @@ This document explains how to set up the Supabase database for the Game Search a
 2. Copy and paste the contents of `seed.sql`
 3. Click **Run**
 
-### 3. Get API Keys
+### 3. Run Fuzzy Search Migration (Required for typo-tolerant search)
+
+1. In the SQL Editor, create another **New Query**
+2. Copy and paste the contents of `migrations/20260120_search_games_fuzzy.sql`
+3. Click **Run**
+
+> **Note:** This migration creates the `search_games_fuzzy` RPC function used for typo-tolerant search (e.g., "red ded" → "Red Dead Redemption 2").
+
+### 4. Get API Keys
 
 1. Go to **Settings** → **API**
 2. Copy the following values to your `.env.local` file:

@@ -95,4 +95,41 @@ describe('Home Page', () => {
     render(<Home />);
     expect(screen.getByText('Loading games...')).toBeInTheDocument();
   });
+
+  it('displays games matching fuzzy search query', async () => {
+    // Mock response for fuzzy search "red ded" matching "Red Dead Redemption 2"
+    const fuzzySearchResponse = {
+      count: 1,
+      items: [
+        {
+          id: '2',
+          title: 'Red Dead Redemption 2',
+          platform: 'Steam',
+          region: 'GLOBAL',
+          imageUrl: '/placeholder-game.png',
+          priceEur: 29.99,
+          oldPriceEur: 59.99,
+          discountPercent: 50,
+          cashbackEur: 0.75,
+          likes: 3420,
+        },
+      ],
+    };
+
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(() =>
+        Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve(fuzzySearchResponse),
+        })
+      )
+    );
+
+    render(<Home />);
+    await waitFor(() => {
+      // Fuzzy search should return Red Dead Redemption even with typo "red ded"
+      expect(screen.getByText('Red Dead Redemption 2')).toBeInTheDocument();
+    });
+  });
 });
