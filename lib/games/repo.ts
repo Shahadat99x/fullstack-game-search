@@ -102,15 +102,19 @@ export async function listGames(options: ListGamesOptions = {}): Promise<ListGam
 
   // Use fuzzy search RPC for queries >= 2 characters
   if (normalizedSearch && normalizedSearch.length >= 2) {
-    const { data, error } = await supabase.rpc('search_games_fuzzy', {
+    // Prepare typed parameters for RPC call
+    // Note: pass empty array [] instead of null for text[] to avoid "unknown" type error
+    const rpcParams = {
       search_term: normalizedSearch,
-      min_price: priceMin ?? null,
-      max_price: priceMax ?? null,
-      region_filter: region ?? null,
-      platform_filters: platforms && platforms.length > 0 ? platforms : null,
-      sort_by: sort,
+      min_price: priceMin !== undefined && priceMin !== null ? Number(priceMin) : null,
+      max_price: priceMax !== undefined && priceMax !== null ? Number(priceMax) : null,
+      region_filter: region || null,
+      platform_filters: platforms && platforms.length > 0 ? platforms : [],
+      sort_by: sort || 'popularity',
       result_limit: effectiveLimit,
-    });
+    };
+
+    const { data, error } = await supabase.rpc('search_games_fuzzy', rpcParams);
 
     if (error) {
       console.error('[listGames] Fuzzy search RPC error:', {
