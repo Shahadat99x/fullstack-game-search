@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { SearchIcon } from './EnebaIcons';
 import { SearchSuggestionRow } from './SearchSuggestionRow';
 import { SearchOfferRow } from './SearchOfferRow';
@@ -31,6 +32,9 @@ export function SearchAutocomplete({
     onSearch,
     debounceMs = 300,
 }: SearchAutocompleteProps) {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+
     const [inputValue, setInputValue] = useState('');
     const [isOpen, setIsOpen] = useState(false);
     const [activeIndex, setActiveIndex] = useState(-1);
@@ -41,6 +45,25 @@ export function SearchAutocomplete({
     const containerRef = useRef<HTMLDivElement>(null);
     const debounceRef = useRef<NodeJS.Timeout | null>(null);
     const fetchDebounceRef = useRef<NodeJS.Timeout | null>(null);
+
+    // Sync input from URL on mount
+    useEffect(() => {
+        const urlSearch = searchParams.get('search');
+        if (urlSearch && urlSearch !== inputValue) {
+            setInputValue(urlSearch);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Update URL with search term
+    const updateURL = useCallback((term: string) => {
+        const trimmed = term.trim();
+        if (trimmed) {
+            router.push(`/?search=${encodeURIComponent(trimmed)}`, { scroll: false });
+        } else {
+            router.push('/', { scroll: false });
+        }
+    }, [router]);
 
     // Memoized query suggestions
     const querySuggestions = useMemo(
@@ -157,9 +180,10 @@ export function SearchAutocomplete({
                     clearTimeout(debounceRef.current);
                 }
                 onSearch?.(selectedValue);
+                updateURL(selectedValue);
             }
         },
-        [querySuggestions, offers, onSearch]
+        [querySuggestions, offers, onSearch, updateURL]
     );
 
     // Handle keyboard navigation
@@ -193,6 +217,7 @@ export function SearchAutocomplete({
                             clearTimeout(debounceRef.current);
                         }
                         onSearch?.(inputValue);
+                        updateURL(inputValue);
                     }
                     break;
                 case 'Escape':
@@ -202,7 +227,7 @@ export function SearchAutocomplete({
                     break;
             }
         },
-        [isOpen, inputValue, totalItems, activeIndex, selectItem, onSearch, fetchOffers]
+        [isOpen, inputValue, totalItems, activeIndex, selectItem, onSearch, fetchOffers, updateURL]
     );
 
     // Click outside to close

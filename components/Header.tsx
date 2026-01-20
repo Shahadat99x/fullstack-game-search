@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import Link from 'next/link';
 import { SearchAutocomplete } from './SearchAutocomplete';
 import { EnebaLogo, WishlistIcon, CartIcon, ProfileIcon } from './EnebaIcons';
@@ -22,7 +23,9 @@ export function Header({ onSearch }: HeaderProps) {
 
           {/* Search Bar - Center */}
           <div className="flex-1 flex justify-center max-w-2xl mx-6">
-            <SearchAutocomplete onSearch={onSearch} placeholder="Search for games, products, and more..." />
+            <Suspense fallback={<div className="w-full h-12 bg-white/10 rounded-full animate-pulse" />}>
+              <SearchAutocomplete onSearch={onSearch} placeholder="Search for games, products, and more..." />
+            </Suspense>
           </div>
 
           {/* Right Side Actions */}

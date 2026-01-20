@@ -1,8 +1,19 @@
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { SearchAutocomplete } from '../SearchAutocomplete';
 
-// Mock fetch for offer suggestions
+// Mock next/navigation
+const mockPush = vi.fn();
+vi.mock('next/navigation', () => ({
+    useRouter: () => ({
+        push: mockPush,
+        replace: vi.fn(),
+        prefetch: vi.fn(),
+    }),
+    useSearchParams: () => ({
+        get: vi.fn(() => null),
+    }),
+}));// Mock fetch for offer suggestions
 const mockOffersResponse = {
     count: 2,
     items: [

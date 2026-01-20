@@ -100,10 +100,52 @@ export async function listGames(options: ListGamesOptions = {}): Promise<ListGam
   const normalizedSearch = search ? normalizeSearchQuery(search) : null;
   const effectiveLimit = Math.min(limit, 100);
 
-  // Use fuzzy search RPC for queries >= 2 characters
+  // If search is provided, try strict ILIKE first for exact matches
   if (normalizedSearch && normalizedSearch.length >= 2) {
-    // Prepare typed parameters for RPC call
-    // Note: pass empty array [] instead of null for text[] to avoid "unknown" type error
+    // Step 1: Try strict ILIKE search first
+    let strictQuery = supabase.from('games').select('*').limit(effectiveLimit);
+    strictQuery = strictQuery.ilike('title', `%${normalizedSearch}%`);
+
+    // Apply filters
+    if (priceMin !== undefined && priceMin !== null) {
+      strictQuery = strictQuery.gte('price_eur', priceMin);
+    }
+    if (priceMax !== undefined && priceMax !== null) {
+      strictQuery = strictQuery.lte('price_eur', priceMax);
+    }
+    if (region) {
+      strictQuery = strictQuery.eq('region', region);
+    }
+    if (platforms && platforms.length > 0) {
+      strictQuery = strictQuery.in('platform', platforms);
+    }
+
+    // Apply sorting
+    switch (sort) {
+      case 'price_asc':
+        strictQuery = strictQuery.order('price_eur', { ascending: true });
+        break;
+      case 'price_desc':
+        strictQuery = strictQuery.order('price_eur', { ascending: false });
+        break;
+      case 'discount':
+        strictQuery = strictQuery.order('discount_percent', { ascending: false, nullsFirst: false });
+        break;
+      case 'popularity':
+      default:
+        strictQuery = strictQuery.order('likes', { ascending: false });
+        break;
+    }
+
+    const { data: strictData, error: strictError } = await strictQuery;
+
+    if (!strictError && strictData && strictData.length > 0) {
+      // ILIKE matched - return these results directly (strict match)
+      const items = (strictData as GameRow[]).map(mapRowToGame);
+      return { count: items.length, items };
+    }
+
+    // Step 2: No ILIKE matches - try fuzzy RPC as fallback
     const rpcParams = {
       search_term: normalizedSearch,
       min_price: priceMin !== undefined && priceMin !== null ? Number(priceMin) : null,
@@ -121,9 +163,8 @@ export async function listGames(options: ListGamesOptions = {}): Promise<ListGam
         message: error.message,
         code: error.code,
       });
-
-      // Fallback to ILIKE if RPC fails (e.g., function not yet deployed)
-      console.warn('[listGames] Falling back to ILIKE search');
+      // No results from ILIKE and RPC failed
+      return { count: 0, items: [] };
     } else if (data) {
       const items = (data as GameRow[]).map(mapRowToGame);
       return { count: items.length, items };
