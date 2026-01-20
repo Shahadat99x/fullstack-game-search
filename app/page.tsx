@@ -7,6 +7,7 @@ import { SortDropdown } from '@/components/SortDropdown';
 import { ResultsSummary } from '@/components/ResultsSummary';
 import { GameGrid } from '@/components/GameGrid';
 import { LoadingSpinner, ErrorMessage } from '@/components/LoadingState';
+import { ActiveFilters } from '@/components/ActiveFilters';
 import { Game } from '@/types/game';
 import { FilterState, DEFAULT_FILTERS, SortOption } from '@/types/filters';
 
@@ -128,6 +129,10 @@ export default function Home() {
     setSearchTerm(term);
   }, []);
 
+  const handleClearSearch = useCallback(() => {
+    setSearchTerm('');
+  }, []);
+
   const handleFiltersChange = useCallback((newFilters: FilterState) => {
     setFilters(newFilters);
   }, []);
@@ -182,6 +187,9 @@ export default function Home() {
 
           {/* Results Area */}
           <div className="flex-1 min-w-0">
+            {/* Active Filter Tags */}
+            <ActiveFilters searchTerm={searchTerm} onClearSearch={handleClearSearch} />
+
             {/* Results Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
               <ResultsSummary count={filteredGames.length} />

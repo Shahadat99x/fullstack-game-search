@@ -41,8 +41,8 @@
    ============================================ */
 body {
   background-color: var(--bg-page);
-  /* Optional gradient based on observation */
-  background: linear-gradient(180deg, #5a31f4 0%, #4321b0 100%);
+  /* Deeper navy-blue gradient like Eneba */
+  background: linear-gradient(180deg, #3d1f9e 0%, #1a1a4e 100%);
   color: var(--text-white);
   font-family: var(--font-montserrat), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
   min-height: 100vh;
