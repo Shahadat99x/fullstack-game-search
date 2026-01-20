@@ -4,39 +4,29 @@ A full-stack game search application built with Next.js, TypeScript, Tailwind CS
 
 > **🔗 Live Demo:** [https://enebasearch.vercel.app](https://enebasearch.vercel.app)
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- npm
-- Supabase account (for database)
-
-### Installation
+## 🚀 Run Locally (1 minute)
 
 ```bash
-npm install
-```
+# 1. Clone
+git clone https://github.com/Shahadat99x/fullstack-game-search.git
+cd fullstack-game-search
 
-### Environment Setup
+# 2. Install
+npm ci
 
-Copy `.env.example` to `.env.local` and add your Supabase credentials:
-
-```bash
+# 3. Configure env (Supabase is already hosted - just add keys)
 cp .env.example .env.local
-```
+# Edit .env.local and add:
+#   NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
+#   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 
-### Database Setup
-
-See [supabase/README.md](./supabase/README.md) for database setup instructions.
-
-### Development
-
-```bash
+# 4. Run
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the application.
+Open [http://localhost:3000](http://localhost:3000) ✅
+
+> **Note:** The Supabase database is already set up and hosted. You only need the env vars.
 
 ## 📡 API Endpoints
 
