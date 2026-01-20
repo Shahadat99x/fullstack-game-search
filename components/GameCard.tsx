@@ -36,7 +36,7 @@ export function GameCard({ game }: GameCardProps) {
   const regionColor = getRegionColor(game.region);
 
   return (
-    <article className="group relative flex flex-col bg-[#1f0a4d] rounded-md overflow-hidden border border-white/5 hover:border-white/20 shadow-md hover:shadow-xl hover:shadow-black/40 transition-all duration-300 hover:-translate-y-1">
+    <article className="group relative flex flex-col bg-[#1f0a4d] rounded-md overflow-hidden border border-white/10 hover:border-white/30 shadow-md hover:shadow-xl hover:shadow-black/40 transition-all duration-300 hover:-translate-y-1">
 
       {/* 
         IMAGE SECTION - Fixed aspect ratio for uniform cards

@@ -281,7 +281,7 @@ export function SearchAutocomplete({
                     onChange={handleInputChange}
                     onFocus={handleFocus}
                     onKeyDown={handleKeyDown}
-                    className="block w-full rounded-full py-3 pl-12 pr-10
+                    className="block w-full rounded-lg py-3 pl-12 pr-10
                      text-gray-900 placeholder-gray-500 
                      bg-white
                      border-0 shadow-lg
