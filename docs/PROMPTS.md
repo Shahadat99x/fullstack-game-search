@@ -51,9 +51,21 @@ This file tracks prompts used during development.
 
 ---
 
-## Phase 4: Deployment (TODO)
+## Phase 4: UI Polish + Deployment
 
-_To be populated_
+**Tasks completed:**
+
+- Applied Eneba-style visual polish to GameCard:
+  - Changed image aspect ratio to `aspect-[3/4]` (portrait, consistent)
+  - Reduced corner radius from `rounded-xl` to `rounded-md`
+  - Glassy teal cashback pill with `backdrop-blur-md`
+  - Glass platform bar with `bg-black/50 backdrop-blur-sm`
+  - Tightened typography spacing
+  - Added subtle hover lift (`hover:-translate-y-1`) + shadow enhancement
+  - Added hover border (`hover:border-white/20`)
+- Verified lint (0 errors), tests (14 passed), and build (success)
+- Updated README with Vercel deployment steps
+- Created submission documentation
 
 ---
 

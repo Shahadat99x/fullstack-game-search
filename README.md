@@ -2,6 +2,8 @@
 
 A full-stack game search application built with Next.js, TypeScript, Tailwind CSS, and Supabase.
 
+> **🔗 Live Demo:** [YOUR_LIVE_URL_HERE](YOUR_LIVE_URL_HERE)
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -142,10 +144,51 @@ curl "http://localhost:3000/list?search=red%20dead"
 - Supabase client integration
 - Debounced search with loading states
 
-### Phase 4: Deployment (TODO)
+### Phase 4: UI Polish + Deployment ✅
 
-- Deploy to Vercel
-- Production environment setup
+- Eneba-style card polish (aspect-[3/4], glassy badges, hover effects)
+- Deploy to Vercel with production env vars
+- Verified production build and tests
+
+## 🚀 Vercel Deployment
+
+### 1. Connect Repository
+
+1. Go to [vercel.com](https://vercel.com) and sign in
+2. Click "Add New" → "Project"
+3. Import your GitHub repository
+4. Select the `fullstack-game-search` repo
+
+### 2. Configure Environment Variables
+
+In Vercel Project Settings → Environment Variables, add:
+
+| Variable | Value | Scope |
+|----------|-------|-------|
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://[project-ref].supabase.co` | All |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Your anon key from Supabase | All |
+| `SUPABASE_SERVICE_ROLE_KEY` | Your service role key (keep secret) | Production |
+
+### 3. Deploy
+
+1. Click "Deploy" — Vercel will build and deploy automatically
+2. Note your production URL (e.g., `https://your-app.vercel.app`)
+
+### 4. Verify Deployment
+
+After deployment, verify these URLs work:
+
+```bash
+# Health check - should return JSON with games
+curl https://YOUR_VERCEL_URL/list
+
+# Search test - should return matching games
+curl "https://YOUR_VERCEL_URL/list?search=gta"
+```
+
+### 5. Update Live URL
+
+Update the Live Demo URL at the top of this README with your Vercel URL.
 
 ## 🧪 Testing
 
